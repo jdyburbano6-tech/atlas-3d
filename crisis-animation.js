@@ -642,8 +642,25 @@
       if(extending)explanation='Selecciona una etapa para explorar su rama de cerca.';
       else if(state.idx===DATA.EXTENSION_STAGE&&state.local>=APPROACH_END)explanation+=' · Comienza la extensión de red.';
       setText('crisisFocusNarration',this.overview?(showFibers?'Fibras ilustrativas sobre la anatomía del atlas.':''):explanation);
+      this.updateAnatomy(stop);
       this.updateEvidence(state,title);
       this.updateStopButtons(state);
+    }
+
+    updateAnatomy(stop){
+      const card=$('crisisAnatomy');
+      if(!card)return;
+      const facts=root.AtlasAnatomy.groups[stop.part];
+      card.hidden=this.overview||!facts;
+      if(card.hidden)return;
+      const selection=stop.part+':'+stop.side;
+      if(card.dataset.selection===selection)return;
+      card.dataset.selection=selection;
+      setText('crisisAnatomyTitle',(facts.title||stop.name)+' · '+sideName(stop.side));
+      setText('crisisAnatomyRegion',facts.region);
+      setText('crisisAnatomyRelations',facts.relations);
+      setText('crisisAnatomyFunction',facts.function);
+      setText('crisisAnatomyLimits',facts.limits);
     }
 
     updateEvidence(state,title){

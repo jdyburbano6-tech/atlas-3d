@@ -1,8 +1,11 @@
 # Atlas ETM V61 · Neuroanatomía 3D
 
 1. Descomprime el ZIP completo.
-2. Abre la carpeta `Atlas_ETM_V61` en Visual Studio Code.
-3. Abre `index.html` con la extensión **Live Server**.
+2. En Visual Studio Code, usa **Archivo → Abrir carpeta** y selecciona `Atlas_ETM_V61_Visual`.
+3. Si hace falta, instala la extensión [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer).
+4. Haz clic derecho sobre `index.html` y elige **Open with Live Server**. El navegador abrirá la dirección local del servidor, por ejemplo `http://127.0.0.1:5500/`.
+
+El paquete incluye la geometría, las fichas y las bibliotecas JavaScript del visor. Después de instalar Live Server puedes abrir el atlas sin internet. Si el navegador muestra una ruta que empieza por `file://`, vuelve a abrir el HTML desde Live Server. Si el visor indica un fallo de WebGL, revisa la aceleración gráfica de Chrome o Edge.
 
 ## Recorrido didáctico
 

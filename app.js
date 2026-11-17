@@ -23,99 +23,76 @@
     other: { es: 'Otros', color: 0xaaaaaa }
   };
 
-  const REGION_ES = {
-    'Telencephalon': 'Telencéfalo', 'Temporal lobe': 'Lóbulo temporal', 'Limbic lobe': 'Lóbulo límbico',
-    'Diencephalon': 'Diencéfalo', 'Brainstem': 'Tronco encefálico', 'Cerebellum': 'Cerebelo',
-    'Occipital lobe': 'Lóbulo occipital', 'Parietal lobe': 'Lóbulo parietal', 'Frontal lobe': 'Lóbulo frontal',
-    'Left cerebral hemisphere': 'Hemisferio cerebral izquierdo', 'Right cerebral hemisphere': 'Hemisferio cerebral derecho',
-    'Insula': 'Ínsula', 'arteries': 'Arterias', 'veins_sinuses': 'Venas y senos', 'cranial_nerves': 'Nervios craneales',
-    'ventricles': 'Sistema ventricular', 'meninges_dura': 'Meninges y duramadre'
-  };
+  const anatomy = window.AtlasAnatomy;
 
   const GROUPS = {
     temporal_mesial: {
       label: 'Complejo temporal mesial',
-      description: 'Agrupación didáctica para mostrar en conjunto hipocampo, amígdala y región parahipocampal del lado seleccionado.',
       left: ['Hippocampus.l','Basolateral complex.l','Central nucleus.l','Corticomedial group.l','Lateral nucleus.l','Medial occipitotemporal gyrus (Parahippocampal*).l'],
       right: ['Hippocampus.r','Basolateral complex.r','Central nucleus.r','Corticomedial group.r','Lateral nucleus.r','Medial occipitotemporal gyrus (Parahippocampal*).r']
     },
     hippocampus: {
-      label: 'Hipocampo', description: 'Estructura mesial temporal representada como malla independiente bilateral.',
+      label: 'Hipocampo',
       left: ['Hippocampus.l'], right: ['Hippocampus.r']
     },
     amygdala: {
-      label: 'Amígdala', description: 'En este atlas la amígdala no es una sola malla: se reconstruye agrupando complejo basolateral, núcleo central, grupo corticomedial y núcleo lateral.',
+      label: 'Amígdala',
       left: ['Basolateral complex.l','Central nucleus.l','Corticomedial group.l','Lateral nucleus.l'],
       right: ['Basolateral complex.r','Central nucleus.r','Corticomedial group.r','Lateral nucleus.r']
     },
     parahippocampal: {
-      label: 'Giro parahipocampal', description: 'Representado en el modelo como giro occipitotemporal medial (parahipocampal).',
+      label: 'Giro parahipocampal',
       left: ['Medial occipitotemporal gyrus (Parahippocampal*).l'], right: ['Medial occipitotemporal gyrus (Parahippocampal*).r']
     },
     temporal_pole: {
-      label: 'Polo temporal', description: 'Extremo anterior del lóbulo temporal, disponible bilateralmente como malla independiente.',
+      label: 'Polo temporal',
       left: ['Temporal pole.l'], right: ['Temporal pole.r']
     },
     fusiform: {
-      label: 'Giro fusiforme', description: 'En la nomenclatura del modelo aparece como giro occipitotemporal lateral.',
+      label: 'Giro fusiforme',
       left: ['Lateral occipitotemporal gyrus.l'], right: ['Lateral occipitotemporal gyrus.r']
     },
     fornix: {
-      label: 'Fórnix', description: 'Tracto de sustancia blanca bilateral incluido como malla separada.',
+      label: 'Fórnix',
       left: ['Fornix.l'], right: ['Fornix.r']
     },
     hippocampal_commissure: {
-      label: 'Comisura hipocampal', description: 'Estructura comisural medial que conecta formaciones hipocampales.',
+      label: 'Comisura hipocampal',
       median: ['Hippocampal commissure']
     },
     anterior_commissure: {
-      label: 'Comisura anterior', description: 'Comisura telencefálica medial visible en el atlas.',
+      label: 'Comisura anterior',
       median: ['Anterior commissure']
     },
     stria_terminalis: {
-      label: 'Estría terminal', description: 'Haz bilateral relacionado anatómicamente con la amígdala.',
+      label: 'Estría terminal',
       left: ['Stria terminalis.l'], right: ['Stria terminalis.r']
     },
     uncinate: {
-      label: 'Fascículo unciforme', description: 'Tracto de asociación frontotemporal disponible bilateralmente.',
+      label: 'Fascículo unciforme',
       left: ['Uncinate fasciculus.l'], right: ['Uncinate fasciculus.r']
     },
     ilf: {
-      label: 'Fascículo longitudinal inferior', description: 'Tracto de asociación occipitotemporal disponible bilateralmente.',
+      label: 'Fascículo longitudinal inferior',
       left: ['Inferior longitudinal fasciculus.l'], right: ['Inferior longitudinal fasciculus.r']
     },
     ifof: {
-      label: 'Fascículo fronto-occipital inferior', description: 'Tracto de asociación largo incluido bilateralmente.',
+      label: 'Fascículo fronto-occipital inferior',
       left: ['Inferior fronto-occipital fasciculus.l'], right: ['Inferior fronto-occipital fasciculus.r']
     },
     corpus_callosum: {
-      label: 'Cuerpo calloso', description: 'Principal comisura interhemisférica del telencéfalo.',
+      label: 'Cuerpo calloso',
       median: ['Corpus callosum']
     },
     insula: {
-      label: 'Ínsula · identificación pendiente', description: 'La ínsula verdadera se encuentra profunda a los opérculos frontal, parietal y temporal. Las dos mallas cuyo nombre incluye «Insula (Subcentral gyrus…)» no están identificadas inequívocamente como corteza insular aislada; no se resaltan como una ínsula confirmada. Para verla de forma anatómica hay que separar o atenuar los opérculos. Referencia: Pró, Anatomía clínica, 2.ª ed., fig. 3-81 y pág. 261.',
+      label: 'Ínsula · referencia anatómica',
       left: [], right: []
     },
     orbitofrontal: {
-      label: 'Región orbitofrontal', description: 'Agrupación didáctica de giros orbitarios y porción orbitaria del giro frontal inferior.',
+      label: 'Región orbitofrontal',
       left: ['Orbital gyri.l','Orbital part of  inferior frontal gyrus.l'],
       right: ['Orbital gyri.r','Orbital part of  inferior frontal gyrus.r']
     }
-  };
-
-  const DESCRIPTIONS = {
-    'Hipocampo': 'Estructura de la formación hipocampal en el lóbulo temporal mesial. El modelo representa cada hipocampo como una malla general, pero NO individualiza CA1, CA2, CA3, CA4, giro dentado ni subículo; la selección no equivale a estos subcampos.',
-    'Complejo basolateral': 'Subdivisión amigdalina del atlas CIT168. Forma parte del grupo de mallas que el visor reúne bajo la etiqueta “Amígdala”.',
-    'Núcleo central': 'Subdivisión amigdalina del atlas CIT168.',
-    'Grupo corticomedial': 'Subdivisión amigdalina del atlas CIT168.',
-    'Núcleo lateral': 'Subdivisión amigdalina del atlas CIT168.',
-    'Comisura hipocampal': 'Comisura de sustancia blanca modelada en la línea media.',
-    'Fórnix': 'Tracto de sustancia blanca asociado anatómicamente a la formación hipocampal.',
-    'Polo temporal': 'Porción más anterior del lóbulo temporal.',
-    'Giro occipitotemporal lateral (giro fusiforme)': 'Giro de la superficie inferior temporo-occipital, mostrado bilateralmente.',
-    'Giro occipitotemporal medial (parahipocampal)': 'Región cortical medial temporal que el modelo etiqueta como parahipocampal.',
-    'Área subcentral y surcos asociados (origen rotulado como ínsula; revisar)': 'La fuente nombra conjuntamente la ínsula y el giro subcentral, pero no demuestra que la superficie corresponda exclusivamente a la corteza insular profunda. Esta malla no se utilizará para delimitar la ínsula hasta verificar sus vértices y relación con los opérculos.',
-    'Giros orbitarios': 'Giros de la superficie orbitaria del lóbulo frontal.'
   };
 
   let manifest, translations, nodes = [], nodeById = new Map(), nodeByName = new Map();
@@ -130,36 +107,14 @@
   const CORTEX_SRC='./models/mindboggle_oas1_0368_cortex_v44_medial.glb';
   const CORTEX_META='./models/mindboggle_oas1_0368_v33.json';
   const CORTEX_ALIGN='./models/cortex_alignment_v44.json';
-  // Funciones educativas, sin equivalencia automática con áreas funcionales de Brodmann.
-  const corticalFacts={
-    precentral:['Anterior al surco central; forma parte del lóbulo frontal.','Incluye gran parte de la corteza motora primaria, implicada en la ejecución de movimientos voluntarios contralaterales.','Entre el surco precentral (anterior) y el surco central (posterior).'],
-    postcentral:['Posterior al surco central, en el lóbulo parietal.','Incluye gran parte de la corteza somatosensorial primaria, que procesa información somática contralateral.','Entre el surco central (anterior) y el surco poscentral (posterior).'],
-    superiorfrontal:['En la cara superolateral y medial del lóbulo frontal.','Participa en redes de planificación, control ejecutivo y funciones premotoras; su función depende de la subregión.','Relacionado lateralmente con el surco frontal superior.'],
-    superiortemporal:['En la parte superior de la superficie lateral del lóbulo temporal.','Interviene en procesamiento auditivo y, según hemisferio y región, aspectos de la percepción del lenguaje.','Inferior al surco lateral y superior al surco temporal superior.'],
-    transversetemporal:['En la cara superior del lóbulo temporal, oculta dentro del surco lateral.','Incluye regiones de corteza auditiva primaria.','Giros de Heschl, sobre el plano temporal.'],
-    pericalcarine:['En la cara medial del lóbulo occipital, alrededor del surco calcarino.','Comprende buena parte de la corteza visual primaria.','A ambos lados del surco calcarino.'],
-    cuneus:['En la cara medial del lóbulo occipital, sobre el surco calcarino.','Participa en el procesamiento visual.','Limitada inferiormente por el surco calcarino y anteriormente por el surco parietooccipital.'],
-    lingual:['En la cara inferior y medial del lóbulo occipital.','Participa en procesamiento visual de orden superior.','Inferior al surco calcarino; próximo al surco colateral.'],
-    precuneus:['En la cara medial del lóbulo parietal, posterior al lobulillo paracentral.','Integra redes relacionadas con procesamiento visuoespacial y memoria autobiográfica.','Entre el surco subparietal, el parietooccipital y la región paracentral.'],
-    paracentral:['En la cara medial, a ambos lados de la terminación superior del surco central.','Contiene representaciones sensitivas y motoras de miembros inferiores.','Continuación medial de los giros precentral y poscentral.'],
-    parsopercularis:['Porción posterior del giro frontal inferior.','En el hemisferio dominante puede formar parte de la red de producción del lenguaje; no equivale por sí sola a toda el área de Broca.','Adyacente a las porciones triangular y precentral del giro frontal inferior.'],
-    parstriangularis:['Porción media del giro frontal inferior.','En el hemisferio dominante participa en redes lingüísticas; la parcelación no define por sí sola una función única.','Entre las porciones opercular y orbitaria del giro frontal inferior.'],
-    insula:['Corteza profunda del surco lateral, cubierta por los opérculos frontal, parietal y temporal.','Interviene en interocepción, integración sensorial, funciones viscerales y saliencia.','Rodeada por el surco circular insular.'],
-    entorhinal:['Corteza del lóbulo temporal medial, anterior y adyacente a la formación hipocampal.','Interfaz importante de información entre neocorteza y formación hipocampal, relacionada con memoria.','En la porción anterior de la región parahipocampal.'],
-    parahippocampal:['En la superficie medial e inferior del lóbulo temporal.','Interviene en memoria contextual y representación de escenas, según subregión.','Relacionado lateralmente con el surco colateral.'],
-    fusiform:['En la superficie inferior de los lóbulos temporal y occipital.','Participa en reconocimiento visual de objetos, caras y formas; especialización variable.','Entre los surcos colateral y occipitotemporal.'],
-    superiorparietal:['En la superficie superior del lóbulo parietal.','Contribuye a integración visuoespacial, atención y orientación sensoriomotora.','Superior al surco intraparietal.'],
-    supramarginal:['Parte del lobulillo parietal inferior, rodeando el extremo del surco lateral.','Se asocia a integración multisensorial, fonológica y atención, según hemisferio.','Alrededor de la terminación posterior del surco lateral.'],
-    inferiorparietal:['En el lobulillo parietal inferior, lateral al surco intraparietal.','Relacionada con integración multisensorial y redes de atención y lenguaje.','Bajo el surco intraparietal; incluye regiones supramarginal y angular.'],
-    temporalpole:['Extremo anterior del lóbulo temporal.','Integra información semántica y socioemocional, con funciones distribuidas.','Continuación anterior de los giros temporales.'],
-    posteriorcingulate:['En la cara medial, por detrás de la región media del giro cingulado.','Forma parte de redes implicadas en procesamiento autorreferencial y memoria.','Superior y posterior al cuerpo calloso.'],
-    caudalanteriorcingulate:['En la cara medial del lóbulo frontal, por delante de la región cingulada media.','Interviene en control cognitivo y evaluación de acciones.','En el giro cingulado, superior al cuerpo calloso.']
-  };
   let hemisphere = 'both', cortexOpacity = 1, autoRotate = false;
   let raycaster, pointer, hoveredMesh = null;
   let routeGroup = null, routePulse = null, routeCurve = null, routeClock = new THREE.Clock();
   let initialCamera = {pos:new THREE.Vector3(0,0,7.2), target:new THREE.Vector3(0,0,0)};
+  const defaultCameraFov = 40;
   let activeTab = 'atlas';
+  const compactPanels = window.matchMedia('(max-width: 1050px)');
+  const openPanels = {menu: !compactPanels.matches, info: !compactPanels.matches};
   let crisisAnimation=null;
   let potentialLab=null;
   let tractView = false, contextOpacity = .08, tractSolo = false;
@@ -171,11 +126,10 @@
   const isTract = a => isFiberCategory(a.cat);
 
   const $ = id => document.getElementById(id);
-  const loading = $('loading'), progressBar = $('progressBar'), loadingText = $('loadingText');
+  const startup = window.AtlasStartup;
 
   function stripAccent(s){ return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
   function sideLabel(side){ return side==='left'?'Izquierdo':side==='right'?'Derecho':'Medial'; }
-  function esRegion(region){ return REGION_ES[region] || region || '—'; }
   function esLabel(node){ return translations[node.label] || node.label; }
   function categoryLabel(cat){ return (CATEGORY_META[cat]||CATEGORY_META.other).es; }
 
@@ -254,13 +208,13 @@
 
   function initThree(){
     const canvas=$('brainCanvas');
-    renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+    renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.25));
     renderer.outputEncoding=THREE.sRGBEncoding;
     renderer.toneMapping=THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure=1.0;
     scene=new THREE.Scene();
-    camera=new THREE.PerspectiveCamera(40,1,.01,200);
+    camera=new THREE.PerspectiveCamera(defaultCameraFov,1,.01,200);
     camera.position.copy(initialCamera.pos);
     controls=new THREE.OrbitControls(camera,canvas);
     controls.enableDamping=true; controls.dampingFactor=.075; controls.minDistance=2.2; controls.maxDistance=15;
@@ -279,21 +233,41 @@
     canvas.addEventListener('pointermove',onPointerMove);
     canvas.addEventListener('pointerdown',e=>canvas.dataset.down=`${e.clientX},${e.clientY}`);
     canvas.addEventListener('pointerup',onPointerUp);
-    window.addEventListener('resize',resize);
+    new ResizeObserver(resize).observe($('viewport'));
     resize();
   }
 
   function resize(){
     const vp=$('viewport'); if(!renderer||!vp) return;
     const w=vp.clientWidth,h=vp.clientHeight;
-    renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+    if(!w||!h)return;
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h;
+    camera.fov=defaultCameraFov;
+    if(compactPanels.matches){
+      // The default camera distance should frame the model in portrait too.
+      const minHorizontalHalfAngle=THREE.MathUtils.degToRad(17.5);
+      const verticalFov=2*Math.atan(Math.tan(minHorizontalHalfAngle)/camera.aspect);
+      camera.fov=Math.max(defaultCameraFov,THREE.MathUtils.radToDeg(verticalFov));
+    }
+    camera.updateProjectionMatrix();
     if(activeTab==='crisis')crisisAnimation?.updateCameraTarget();
   }
 
-  function loadModel(){
-    const draco=new THREE.DRACOLoader(); draco.setDecoderPath(DRACO_PATH);
-    const loader=new THREE.GLTFLoader(); loader.setDRACOLoader(draco);
-    loader.load(MODEL_URL, gltf=>{
+  async function loadModel(){
+    const draco=new THREE.DRACOLoader().setDecoderPath(DRACO_PATH);
+    const loader=new THREE.GLTFLoader().setDRACOLoader(draco);
+    try{
+      const gltf=await loader.loadAsync(MODEL_URL,event=>{
+        if(event.total&&event.loaded>=event.total){
+          startup.stage('Decodificando la geometría del cerebro…',85);
+        }else if(event.total){
+          const fraction=event.loaded/event.total;
+          startup.stage('Leyendo el modelo del cerebro… '+Math.round(fraction*100)+'%',30+fraction*55);
+        }
+      });
+      if(startup.failed)return;
+      startup.stage('Preparando la escena 3D…',95);
       gltfScene=gltf.scene; brainRoot.add(gltfScene);
       const coreBox=new THREE.Box3(); let hasCore=false;
       gltfScene.traverse(obj=>{
@@ -324,13 +298,9 @@
       }
       if(activeTab==='crisis')crisisAnimation?.enter();
       updateVisibility(); updateMaterials();
-      loadScientificCortexV34();
-      loadingText.textContent=`${nodes.length} estructuras cargadas`;
-      progressBar.style.width='100%';
-      setTimeout(()=>loading.classList.add('hidden'),350);
-    },xhr=>{
-      if(xhr.total){ const p=Math.max(8,Math.min(95,(xhr.loaded/xhr.total)*100)); progressBar.style.width=`${p}%`; loadingText.textContent=`Cargando modelo 3D… ${Math.round(p)}%`; }
-    },err=>{ console.error(err); loadingText.textContent='No se pudo cargar el modelo 3D. Revisa que models/brain.glb esté junto al proyecto.'; });
+    }finally{
+      draco.dispose();
+    }
   }
 
   // ----- V34: corteza científica integrada al visor de V32 -----
@@ -402,7 +372,11 @@
       fetch(CORTEX_META).then(r=>{if(!r.ok)throw Error('Catálogo cortical inaccesible');return r.json();}),
       fetch(CORTEX_ALIGN).then(r=>{if(!r.ok)throw Error('Matriz de alineación inaccesible');return r.json();})
     ]).then(([meta,reg])=>{
-      meta.structures.filter(r=>r.category==='cortex').forEach(row=>scientificRows.set(row.id,row));
+      meta.structures.filter(r=>r.category==='cortex').forEach(row=>{
+        const name=row.name.replace(/ (izquierdo|derecho)$/, '').replace('sin parcellación','sin parcelar');
+        const side=row.side==='lh'?'left':'right';
+        scientificRows.set(row.id,{...row,label:name,name:`${name} · hemisferio ${sideLabel(side).toLowerCase()}`});
+      });
       const a=reg.matrix_mm_to_old;
       const align=new THREE.Matrix4().set(a[0][0],a[1][0],a[2][0],a[3][0], a[0][1],a[1][1],a[2][1],a[3][1], a[0][2],a[1][2],a[2][2],a[3][2], 0,0,0,1);
       const loader=new THREE.GLTFLoader();
@@ -431,21 +405,6 @@
         }
       },undefined,err=>reportError('No se pudo cargar la nueva corteza: '+(err.message||err)));
     }).catch(err=>reportError('No se pudo preparar la corteza MRI: '+err.message));
-  }
-  function corticalDetails(id){
-    const row=scientificRows.get(id);if(!row)return;
-    const key=id.replace(/^C_(lh|rh)_/,'');
-    const facts=corticalFacts[key]||[
-      'Región cortical de la parcelación Desikan-Killiany. Los límites detallados deben contrastarse con el atlas de origen.',
-      'Esta parcela anatómica no corresponde por sí sola a una función exclusiva o a un área de Brodmann; función específica pendiente de verificación.',
-      'El dataset identifica una región de superficie cortical; los surcos limítrofes específicos no están anotados individualmente.'
-    ];
-    return {row,relations:facts[0],function:facts[1],sulci:facts[2]};
-  }
-  function fillV34RightPanel(rel,fn,sulci){
-    $('v34InfoRelations').textContent=rel;
-    $('v34InfoFunction').textContent=fn;
-    $('v34InfoSulci').textContent=sulci;
   }
   function updateCortexFloatLabel(){
     const label=$('v34FloatingLabel'),mesh=scientificMeshes.get(scientificSelected);
@@ -581,70 +540,91 @@
     controls.target.set(0,-.05,0); camera.position.set(0.25,.25,7.2); controls.update();
   }
 
+  const limitHeadings = {
+    arteries:'Origen y trayecto',
+    cranial_nerves:'Origen y trayecto',
+    tracts:'Trayecto y conexiones',
+    white_matter:'Trayecto o límites',
+    veins_sinuses:'Trayecto y drenaje',
+    cortex:'Límites y surcos'
+  };
+
+  function showAnatomy(facts,{title,category,side,kind,note,members=[]}){
+    $('infoEmpty').classList.add('hidden');
+    $('infoContent').classList.remove('hidden');
+    $('infoTitle').textContent=title;
+    $('infoCategory').textContent=category;
+    const chip=document.createElement('span');
+    chip.className='chip';
+    chip.textContent=side;
+    $('infoChips').replaceChildren(chip);
+    const description=$('infoDescription');
+    description.textContent=facts.summary||'';
+    description.hidden=!facts.summary;
+    $('infoRegion').textContent=facts.region;
+    $('v34InfoRelations').textContent=facts.relations;
+    $('v34InfoFunction').textContent=facts.function;
+    $('infoLimitsLabel').textContent=limitHeadings[kind]||'Límites y referencias';
+    $('v34InfoSulci').textContent=facts.limits;
+    const audit=$('anatomyAuditNote');
+    audit.textContent=note||facts.note||'';
+    audit.classList.toggle('hidden',!audit.textContent);
+    const list=$('groupMembers');
+    list.classList.toggle('hidden',!members.length);
+    list.replaceChildren();
+    if(members.length){
+      const heading=document.createElement('b');
+      heading.textContent='Componentes de la selección';
+      const items=document.createElement('ul');
+      for(const name of members){
+        const item=document.createElement('li');
+        item.textContent=name;
+        items.appendChild(item);
+      }
+      list.append(heading,items);
+    }
+  }
+
   function updateInfo(){
     const empty=$('infoEmpty'), content=$('infoContent');
-    $('crisisInfo')?.classList.toggle('hidden',activeTab!=='crisis');
+    const inCrisis=activeTab==='crisis';
+    $('crisisInfo').classList.toggle('hidden',!inCrisis);
+    empty.classList.toggle('hidden',inCrisis);
+    content.classList.add('hidden');
+    if(inCrisis){crisisAnimation?.updateUI();return;}
+    if(activeTab==='neural'){
+      const region=connectomeRegions.get(connectomeFocusRegion);
+      if(region){
+        const facts=anatomy.groups[region.key];
+        showAnatomy(facts,{title:facts.title||region.label,category:'Región del recorrido',
+          side:sideLabel(CONNECTOME_SIDES[region.side]),
+          note:region.reference?'Representada mediante un marcador anatómico orientativo.':''});
+      }
+      return;
+    }
     if(sciActive()&&scientificSelected){
       const row=scientificRows.get(scientificSelected);
-      const {relations, function:purpose, sulci}=corticalDetails(scientificSelected);
-      empty.classList.add('hidden');content.classList.remove('hidden');
-      $('infoCategory').textContent=corticalAreas?'Parcela cortical · Desikan-Killiany':'Corteza cerebral';
-      $('infoTitle').textContent=row.name;
-      $('infoDescription').textContent='Superficie cortical reconstruida a partir de resonancia magnética.';
-      $('infoRegion').textContent=row.side==='lh'?'Hemisferio izquierdo':'Hemisferio derecho';
-      $('infoSource').textContent='Mindboggle-101 · Klein y Tourville (2012).';
-      $('infoChips').textContent='';
-      $('groupMembers').classList.add('hidden');
-      $('anatomyAuditNote').classList.add('hidden');
-      fillV34RightPanel(relations,purpose,sulci);
+      const parcel=scientificSelected.replace(/^C_(lh|rh)_/,'');
+      showAnatomy(anatomy.cortex[parcel],{title:row.label,category:'Corteza cerebral',
+        side:row.side==='lh'?'Hemisferio izquierdo':'Hemisferio derecho',kind:'cortex'});
       return;
     }
-    if(activeTab==='crisis'){empty.classList.add('hidden');content.classList.add('hidden');crisisAnimation?.updateUI();return;}
-    const promptTitle=empty.querySelector('h2');
-    const promptText=empty.querySelector('p');
-    if(promptTitle)promptTitle.textContent='Selecciona una estructura';
-    if(promptText)promptText.textContent='Haz clic sobre el cerebro o usa el buscador.';
-    const qcNotice=$('anatomyAuditNote');
-    if(qcNotice)qcNotice.classList.add('hidden');
-    if(!selectedIds.size && currentGroup==='insula'){
-      empty.classList.add('hidden');content.classList.remove('hidden');
-      $('infoCategory').textContent='Estructura profunda · verificación pendiente';
-      $('infoTitle').textContent='Ínsula';$('infoDescription').textContent=GROUPS.insula.description;
-      $('infoRegion').textContent='Profundidad del surco lateral (cisura de Silvio)';
-      $('infoSource').textContent='Pró 2.ª ed., figura 3-81; referencia del modelo de origen sin delimitación validada';
-      $('infoChips').textContent='Sin segmentación validada';$('groupMembers').classList.add('hidden');
-      if(qcNotice){qcNotice.textContent='Se desactivó la falsa identificación visual. La malla llamada «Insula (Subcentral gyrus...)» requiere revisar su relación espacial con el surco circular y los opérculos antes de usarla como ínsula.';qcNotice.classList.remove('hidden');}
+    if(currentGroup&&(selectedIds.size||currentGroup==='insula')){
+      const group=GROUPS[currentGroup];
+      const sides=new Set([...selectedIds].map(id=>nodeById.get(id).side));
+      const side=sides.size>1||(currentGroup==='insula'&&hemisphere==='both')?'Bilateral':
+        sideLabel(sides.values().next().value||hemisphere);
+      const members=[...new Set([...selectedIds].map(id=>esLabel(nodeById.get(id))))];
+      const title=currentGroup==='insula'?'Ínsula':group.label;
+      const note=currentGroup==='insula'?'Para localizar la superficie insular, busca «Corteza insular» en el atlas de resonancia.':'';
+      const kind=selectedIds.size===1?nodeById.get(selectedIds.values().next().value).category:undefined;
+      showAnatomy(anatomy.groups[currentGroup],{title,category:'Agrupación anatómica',side,kind,note,members});
       return;
     }
-    if(!selectedIds.size){ empty.classList.remove('hidden'); content.classList.add('hidden'); return; }
-    empty.classList.add('hidden'); content.classList.remove('hidden');
-    const ids=[...selectedIds];
-    if(currentGroup && GROUPS[currentGroup]){
-      const g=GROUPS[currentGroup]; $('infoCategory').textContent='Agrupación anatómica'; $('infoTitle').textContent=g.label;
-      $('infoDescription').textContent=g.description; $('infoRegion').textContent='Varias estructuras'; $('infoSource').textContent='Combinación de mallas existentes del atlas';
-      $('infoChips').innerHTML=`<span class="chip">${hemisphere==='both'?'Bilateral':sideLabel(hemisphere)}</span><span class="chip">${ids.length} mallas</span>`;
-      const names=ids.map(id=>esLabel(nodeById.get(id))).filter(Boolean);
-      $('groupMembers').classList.remove('hidden'); $('groupMembers').innerHTML=`<b>Componentes visibles</b><ul>${names.map(n=>`<li>${n}</li>`).join('')}</ul>`;
-    } else {
-      const n=nodeById.get(ids[0]); if(!n) return;
-      const label=esLabel(n); $('infoCategory').textContent=categoryLabel(n.category); $('infoTitle').textContent=label;
-      $('infoDescription').textContent=DESCRIPTIONS[label] || `Estructura anatómica del atlas. Categoría: ${categoryLabel(n.category).toLowerCase()}.`;
-      $('infoRegion').textContent=esRegion(n.region); $('infoSource').textContent=n.source||'—';
-      $('infoChips').innerHTML=`<span class="chip">${sideLabel(n.side)}</span>${n.parent?`<span class="chip">${n.parent==='Amygdaloid body'?'Cuerpo amigdalino':n.parent}</span>`:''}`;
-      $('groupMembers').classList.add('hidden');
-    }
-    // Panel de todas las estructuras V32: datos originales + límites verificables.
-    const n=selectedIds.size===1?nodeById.get([...selectedIds][0]):null;
-    const label=n?esLabel(n):'';
-    const category=n?.category||'';
-    const facts=(/hipocampo/i.test(label)&&category==='cortex')?
-      ['Localizado en la región temporal medial, junto al asta temporal del ventrículo lateral.', 'Participa en consolidación de memoria episódica y navegación espacial.', 'Formación hipocampal; subcampos CA y giro dentado no individualizados en la malla V32.']:
-      (/tálamo/i.test(label))?['Estructura diencefálica que limita lateralmente el tercer ventrículo.','Relevo e integración de múltiples vías sensoriales, motoras y asociativas.','El catálogo V32 no verifica todos los subnúcleos por separado.']:
-      (/arter|carót|cerebral media|basilar/i.test(label)||category==='arteries')?['Vaso de la circulación encefálica; revisar el punto de origen y trayecto propios de la rama.','Irrigación vascular; territorio específico según la arteria.','La exactitud del trayecto de esta malla no ha sido verificada individualmente.']:
-      (category==='cranial_nerves')?['Nervio craneal de trayecto intracraneal o extracraneal según la malla.','Inervación específica de acuerdo con el par y su componente funcional.','Comprobar origen aparente, salida craneal y relaciones con vasos y meninges.']:
-      (category==='meninges_dura')?['Cubierta y repliegues meníngeos del sistema nervioso central.','Protección mecánica, compartimentación o drenaje venoso según el componente.','Solo se muestran los componentes del archivo V32, no las tres capas meníngeas completas.']:
-      ['Relaciones anatómicas particulares pendientes de revisión en la malla V32.','Función específica pendiente de comprobar para esta estructura.','Los límites geométricos del modelo histórico no están validados individualmente.'];
-    fillV34RightPanel(...facts);
+    const node=nodeById.get(selectedIds.values().next().value);
+    if(!node)return;
+    showAnatomy(anatomy.legacy[node.label],{title:esLabel(node),category:categoryLabel(node.category),
+      side:sideLabel(node.side),kind:node.category,note:anatomy.modelNotes[node.id]});
   }
 
   function onPointerMove(e){
@@ -745,7 +725,7 @@
   }
 
   function selectGroup(key){
-    if(key==='insula'){selectedIds.clear();isolateIds=null;currentGroup='insula';updateVisibility();updateMaterials();updateInfo();return;}
+    if(key==='insula'){selectIds([],{groupKey:key});return;}
     const ids=idsForGroup(key); if(ids.length) selectIds(ids,{groupKey:key});
   }
 
@@ -1044,7 +1024,7 @@
             const meshes=new Set(crisisAnimation.idsFor(isReference?'hippocampus':key,side)
               .flatMap(id=>scientificMeshes.has(id)?[scientificMeshes.get(id)]:meshesById.get(id)||[]));
             if(meshes.size&&(!isReference||anchor))groups.push({
-              label:crisisAnimation.labelFor(key),side,meshes,anchor,
+              key,label:crisisAnimation.labelFor(key),side,meshes,anchor,
               atClose:step.tracts?.some(([part])=>part===key)??false,
               offset:step.ordered?order*.49:i===window.CrisisRouteData.CROSSING_STAGE&&order>0?.45:0
             });
@@ -1063,7 +1043,7 @@
               for(const mesh of meshesById.get(id)||[])found.add(mesh);
             }
           }
-          if(found.size)groups.push({label:GROUPS[key].label,side,meshes:found});
+          if(found.size)groups.push({key,label:GROUPS[key].label,side,meshes:found});
         }
       }
       return {id:i+1,label,groups};
@@ -1076,7 +1056,8 @@
     for(const stage of stages){
       for(const group of stage.groups){
         const id=connectomeRegions.size+1;
-        const region={id,stage:stage.id,label:group.label,side:CONNECTOME_SIDES.indexOf(group.side),
+        const region={id,key:group.key,stage:stage.id,label:group.label,side:CONNECTOME_SIDES.indexOf(group.side),
+          reference:!!group.anchor,
           bounds:new THREE.Box3(),layers:new Set(),atClose:group.atClose===true};
         connectomeRegions.set(id,region);
         if(group.anchor){
@@ -1294,7 +1275,7 @@
       if(section.children.length)sections.push(section);
     }
     picker.replaceChildren(new Option('Vista general',0),...sections);
-    if(![...picker.options].some(option=>Number(option.value)===connectomeFocusRegion))connectomeFocusRegion=0;
+    if(![...picker.options].some(option=>Number(option.value)===connectomeFocusRegion))clearConnectomeRegion();
     picker.value=String(connectomeFocusRegion);
     updateConnectomeRegionPicker();
     if(connectomePoints)connectomePoints.material.uniforms.uRegion.value=connectomeFocusRegion;
@@ -1316,9 +1297,11 @@
   }
 
   function clearConnectomeRegion(){
+    const hadSelection=connectomeFocusRegion!==0;
     connectomeFocusRegion=0;
     $('connectomeRegion').value='0';
     if(connectomePoints)connectomePoints.material.uniforms.uRegion.value=0;
+    if(hadSelection&&activeTab==='neural'){syncPanels();updateInfo();resize();}
   }
 
   function focusConnectomeRegion(id){
@@ -1330,6 +1313,7 @@
     }
     if(region.atClose&&(!connectomeStarted||connectomeElapsed<connectomeDuration))return;
     connectomeFocusRegion=id;
+    syncPanels();updateInfo();resize();
     connectomePoints.material.uniforms.uRegion.value=id;
     if(connectomeSide>=0&&connectomeSide!==region.side){
       connectomeSide=-1;
@@ -1566,6 +1550,7 @@
     document.body.classList.toggle('crisis-mode',tab==='crisis');
     $('tractTooltip').classList.add('hidden');
     document.body.classList.toggle('neural-mode',neural);
+    syncPanels();
     if(neural){
       isolateIds=null;selectedIds.clear();currentGroup=null;
       clearRoute();
@@ -1621,6 +1606,50 @@
     $('tractFocus').onclick=()=>{if(selectedIds.size)focusIds([...selectedIds]);};
     $('tractClear').onclick=()=>{select.value='';select.onchange();};
   }
+  function syncPanels(){
+    const infoAvailable=activeTab==='atlas'||activeTab==='crisis'||
+      activeTab==='neural'&&connectomeFocusRegion!==0;
+    const infoVisible=infoAvailable&&openPanels.info;
+    const overlay=compactPanels.matches&&(openPanels.menu||infoVisible);
+    $('sidebar').hidden=!openPanels.menu;
+    $('infoPanel').hidden=!infoVisible;
+    $('app').classList.toggle('menu-closed',!openPanels.menu);
+    $('app').classList.toggle('info-closed',!infoVisible);
+    $('btnMenuPanel').setAttribute('aria-expanded',String(openPanels.menu));
+    $('btnInfoPanel').setAttribute('aria-expanded',String(infoVisible));
+    $('btnInfoPanel').hidden=!infoAvailable;
+    $('panelBackdrop').hidden=!overlay;
+    $('viewport').inert=overlay;
+  }
+
+  function setPanelOpen(panel,open){
+    openPanels[panel]=open;
+    if(open&&compactPanels.matches)openPanels[panel==='menu'?'info':'menu']=false;
+    syncPanels();
+  }
+
+  function setupPanels(){
+    const menuButton=$('btnMenuPanel'), infoButton=$('btnInfoPanel');
+    menuButton.onclick=()=>setPanelOpen('menu',!openPanels.menu);
+    infoButton.onclick=()=>setPanelOpen('info',!openPanels.info);
+    const backdrop=$('panelBackdrop');
+    function closeOverlay(){
+      if(backdrop.hidden)return;
+      const menuVisible=openPanels.menu;
+      setPanelOpen(menuVisible?'menu':'info',false);
+      (menuVisible?menuButton:infoButton).focus();
+    }
+    backdrop.onclick=closeOverlay;
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&$('creditsModal').classList.contains('hidden'))closeOverlay();
+    });
+    compactPanels.addEventListener('change',()=>{
+      openPanels.menu=openPanels.info=!compactPanels.matches;
+      syncPanels();
+    });
+    syncPanels();
+  }
+
   function setupUI(){
     setupTracts();setupCortex();
     document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{
@@ -1643,7 +1672,6 @@
     };
     $('btnAuto').onclick=()=>{ autoRotate=!autoRotate; controls.autoRotate=autoRotate; $('btnAuto').textContent=autoRotate?'Detener rotación':'Rotación automática'; };
     $('btnFullscreen').onclick=()=>{ if(!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); };
-    $('mobileMenu').onclick=()=>$('sidebar').classList.toggle('open');
     $('btnCredits').onclick=()=>$('creditsModal').classList.remove('hidden'); $('closeCredits').onclick=()=>$('creditsModal').classList.add('hidden');
     $('creditsModal').onclick=e=>{ if(e.target===$('creditsModal')) $('creditsModal').classList.add('hidden'); };
     setupSearch();
@@ -1661,13 +1689,41 @@
     if(sciActive())updateCortexFloatLabel();
   }
 
-  async function boot(){
-    try{
-      const [m,t]=await Promise.all([fetch(MANIFEST_URL).then(r=>r.json()),fetch(TRANSLATIONS_URL).then(r=>r.json())]); manifest=m; translations=t; setupData();
-      buildCategories();
-      setupUI(); initThree(); loadModel(); animate();
-    }catch(err){ console.error('[Inicio del atlas]',err); const detail=String(err?.message||err||'Error desconocido').slice(0,180); loadingText.textContent=/WebGL/i.test(detail)?'No se pudo iniciar WebGL: '+detail:'No fue posible iniciar el atlas: '+detail+'. Abre index.html desde Live Server y verifica los archivos.'; }
+  async function fetchJSON(url){
+    const response=await fetch(url);
+    if(!response.ok)throw new Error(url.split('?')[0]+' no está disponible (HTTP '+response.status+').');
+    return response.json();
   }
 
+  async function boot(){
+    if(startup.failed)return;
+    try{
+      startup.stage('Leyendo el inventario del atlas…',12);
+      [manifest,translations]=await Promise.all([fetchJSON(MANIFEST_URL),fetchJSON(TRANSLATIONS_URL)]);
+      if(startup.failed)return;
+      setupData();
+      buildCategories();
+      setupUI();
+      startup.stage('Iniciando el motor 3D…',24);
+      initThree();
+      startup.stage('Leyendo el modelo del cerebro…',30);
+      await loadModel();
+      if(startup.failed)return;
+      renderer.render(scene,camera);
+      startup.finish(nodes.length);
+      animate();
+      loadScientificCortexV34();
+    }catch(err){
+      console.error('[Inicio del atlas]',err);
+      const detail=err?.message||err?.target?.responseURL||String(err);
+      if(/WebGL/i.test(detail)){
+        startup.fail('El navegador no pudo iniciar WebGL.', 'En Chrome o Edge, revisa que la aceleración gráfica esté activa, reinicia el navegador y vuelve a abrir la dirección de Live Server.');
+      }else{
+        startup.fail('Falló el arranque del atlas.', detail.slice(0,220)+' Revisa que Live Server esté abierto desde la carpeta completa.');
+      }
+    }
+  }
+
+  setupPanels();
   boot();
 })();

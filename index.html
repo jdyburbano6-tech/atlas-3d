@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#08111f" />
   <title>Atlas ETM V61 · Neuroanatomía 3D</title>
   <meta name="description" content="Visor anatómico 3D en español para explorar la anatomía relacionada con la epilepsia temporal mesial." />
-  <link rel="stylesheet" href="style.css?v=61" />
+  <link rel="stylesheet" href="style.css?v=61-visual" />
 </head>
 <body>
   <div id="app">
@@ -14,18 +14,20 @@
       <div class="brand">
         <div class="brand-mark">🧠</div>
         <div>
-          <h1>Atlas ETM V61 · Neuroanatomía 3D</h1>
+          <h1>Atlas ETM<span class="brand-detail"> V61 · Neuroanatomía 3D</span></h1>
           <p>Modelo anatómico interactivo en español</p>
         </div>
       </div>
       <div class="top-actions">
+        <button type="button" id="btnMenuPanel" class="ghost panel-toggle" aria-controls="sidebar" aria-expanded="true">Menú</button>
+        <button type="button" id="btnInfoPanel" class="ghost panel-toggle" aria-label="Información" aria-controls="infoPanel" aria-expanded="true">Info<span class="info-label-detail">rmación</span></button>
         <button id="btnAuto" class="ghost">Rotación automática</button>
-        <button id="btnCredits" class="ghost">Créditos</button>
-        <button id="btnFullscreen" class="ghost">Pantalla completa</button>
+        <button id="btnCredits" class="ghost" aria-label="Créditos" title="Créditos">Créditos</button>
+        <button id="btnFullscreen" class="ghost" aria-label="Pantalla completa" title="Pantalla completa">Pantalla completa</button>
       </div>
     </header>
 
-    <aside id="sidebar" class="sidebar">
+    <aside id="sidebar" class="sidebar" aria-label="Menú del atlas">
       <div class="tabs" role="tablist" aria-label="Módulos del simulador">
         <button class="tab active" data-tab="atlas">Atlas cerebral</button>
         <button class="tab" data-tab="neural">Propagación</button>
@@ -254,7 +256,6 @@
           </section>
         </div>
       </section>
-      <button id="mobileMenu" class="mobile-menu">☰</button>
       <div class="viewport-toolbar">
         <button id="btnResetView" title="Vista inicial" aria-label="Vista inicial">⌂</button>
         <button id="btnZoomIn" title="Acercar" aria-label="Acercar">＋</button>
@@ -313,12 +314,23 @@
       </div>
     </main>
 
-    <aside id="infoPanel" class="info-panel">
+    <div id="panelBackdrop" class="panel-backdrop" aria-hidden="true" hidden></div>
+
+    <aside id="infoPanel" class="info-panel" aria-label="Información del atlas">
       <section id="crisisInfo" class="crisis-info hidden" aria-live="polite">
         <div class="info-kicker">Animación de crisis · modelo propuesto</div>
         <h2 id="crisisStageTitle">Hipocampo</h2>
         <div class="crisis-step-meta"><span id="crisisStageNumber">Etapa 1 de 9</span><b id="crisisCurrentLabel">Hipocampo</b></div>
         <article class="crisis-info-card"><h3>¿Qué se activa?</h3><p id="crisisStageDescription"></p></article>
+        <article id="crisisAnatomy" class="crisis-info-card" hidden>
+          <h3 id="crisisAnatomyTitle"></h3>
+          <dl class="meta-list anatomy-facts">
+            <div><dt>Región</dt><dd id="crisisAnatomyRegion"></dd></div>
+            <div><dt>Relaciones anatómicas</dt><dd id="crisisAnatomyRelations"></dd></div>
+            <div><dt>Función</dt><dd id="crisisAnatomyFunction"></dd></div>
+            <div><dt>Límites y referencias</dt><dd id="crisisAnatomyLimits"></dd></div>
+          </dl>
+        </article>
         <article class="crisis-info-card">
           <h3>Conexión de esta etapa</h3>
           <p><strong id="crisisBranchTitle"></strong></p>
@@ -356,15 +368,13 @@
         <div class="info-kicker" id="infoCategory"></div>
         <h2 id="infoTitle"></h2>
         <div class="chips" id="infoChips"></div>
-        <p id="infoDescription" class="info-description"></p>
+        <p id="infoDescription" class="info-description" hidden></p>
         <p id="anatomyAuditNote" class="anatomy-audit-note hidden" role="status"></p>
-        <dl class="meta-list">
+        <dl class="meta-list anatomy-facts">
           <div><dt>Región</dt><dd id="infoRegion"></dd></div>
-          <div><dt>Fuente anatómica</dt><dd id="infoSource"></dd></div>
-          <div class="v34-detail" id="v34RelationsRow"><dt>Relaciones anatómicas</dt><dd id="v34InfoRelations">Selecciona una estructura para consultar sus relaciones.</dd></div>
-          <div class="v34-detail" id="v34FunctionRow"><dt>Función</dt><dd id="v34InfoFunction">Se mostrará la información disponible.</dd></div>
-          <div class="v34-detail" id="v34SulciRow"><dt>Límites y surcos</dt><dd id="v34InfoSulci">Se indicarán si están documentados.</dd></div>
-          
+          <div><dt>Relaciones anatómicas</dt><dd id="v34InfoRelations"></dd></div>
+          <div><dt>Función</dt><dd id="v34InfoFunction"></dd></div>
+          <div><dt id="infoLimitsLabel">Límites y referencias</dt><dd id="v34InfoSulci"></dd></div>
         </dl>
         <div id="groupMembers" class="group-members hidden"></div>
       </div>
@@ -373,9 +383,11 @@
     <div id="loading" class="loading-screen">
       <div class="loading-card">
         <div class="brain-loader">🧠</div>
-        <h2>Cargando atlas 3D</h2>
-        <p id="loadingText">Preparando las estructuras anatómicas…</p>
-        <div class="progress"><div id="progressBar"></div></div>
+        <h2 id="loadingTitle">Cargando atlas 3D</h2>
+        <p id="loadingText" role="status">Cargando los archivos del visor…</p>
+        <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
+        <p id="loadingHelp" hidden></p>
+        <button type="button" class="ghost" id="retryAtlas" hidden>Reintentar</button>
       </div>
     </div>
 
@@ -385,20 +397,96 @@
         <h2>Créditos y licencia</h2>
         <p>El modelo cerebral base y sus metadatos proceden de <a href="https://github.com/itayinbarr/brainproject" target="_blank" rel="noopener noreferrer">Brain Project, de Itay Inbar</a>, con geometría de Z-Anatomy y BodyParts3D / DBCLS. El modelo base y sus derivados se distribuyen bajo <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>. El atlas adapta etiquetas, agrupaciones y trazos para la visualización.</p>
         <p>Las superficies corticales adicionales proceden de <a href="https://doi.org/10.5281/zenodo.22072032" target="_blank" rel="noopener noreferrer">Mindboggle-101, de Arno Klein</a>, sujeto OAS1_0368_MR1, FreeSurfer 5.1, bajo <a href="https://creativecommons.org/licenses/by/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. Se convirtieron a GLB y se alinearon de forma aproximada con el modelo base. Referencia del conjunto de datos: <a href="https://doi.org/10.3389/fnins.2012.00171" target="_blank" rel="noopener noreferrer">Klein y Tourville (2012)</a>.</p>
-        <p>El paquete incluye los <a href="./LICENSE_ORIGINAL.txt" target="_blank" rel="noopener noreferrer">avisos de Brain Project</a> y la <a href="./vendor/draco/LICENSE.txt" target="_blank" rel="noopener noreferrer">licencia de Google Draco</a>.</p>
+        <p>El paquete incluye los <a href="./LICENSE_ORIGINAL.txt" target="_blank" rel="noopener noreferrer">avisos de Brain Project</a> y las licencias de <a href="./vendor/three/LICENSE.txt" target="_blank" rel="noopener noreferrer">Three.js</a> y <a href="./vendor/draco/LICENSE.txt" target="_blank" rel="noopener noreferrer">Google Draco</a>.</p>
+        <details class="anatomy-references">
+          <summary>Referencias de las fichas anatómicas</summary>
+          <ul>
+            <li>Parcelas, giros y surcos: <a href="https://pubmed.ncbi.nlm.nih.gov/16530430/" target="_blank" rel="noopener noreferrer">Desikan et al. (2006)</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2937159/" target="_blank" rel="noopener noreferrer">Destrieux et al. (2010)</a> y <a href="https://www.ncbi.nlm.nih.gov/books/NBK549789/" target="_blank" rel="noopener noreferrer">Neuroanatomy, Cerebral Hemisphere</a>.</li>
+            <li>Función cortical: <a href="https://www.ncbi.nlm.nih.gov/books/NBK10799/" target="_blank" rel="noopener noreferrer">Purves et al., Neuroscience</a>, <a href="https://pubmed.ncbi.nlm.nih.gov/25251486/" target="_blank" rel="noopener noreferrer">D’Esposito y Postle (2015)</a> y <a href="https://www.ncbi.nlm.nih.gov/books/NBK554483/" target="_blank" rel="noopener noreferrer">Neuroanatomy, Frontal Cortex</a>.</li>
+            <li>Temporal medial: <a href="https://www.ncbi.nlm.nih.gov/books/NBK482171/" target="_blank" rel="noopener noreferrer">Neuroanatomy, Hippocampus</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC1198740/" target="_blank" rel="noopener noreferrer">Stafstrom (2005)</a> y <a href="https://doi.org/10.1002/hbm.23289" target="_blank" rel="noopener noreferrer">Tyszka y Pauli (2016)</a>.</li>
+            <li>Diencéfalo y núcleos basales: <a href="https://doi.org/10.1038/sdata.2018.270" target="_blank" rel="noopener noreferrer">Najdenovska et al. (2018)</a>, <a href="https://doi.org/10.1038/s41597-020-00644-6" target="_blank" rel="noopener noreferrer">Neudorfer et al. (2020)</a> y <a href="https://www.ncbi.nlm.nih.gov/books/NBK537141/" target="_blank" rel="noopener noreferrer">Neuroanatomy, Basal Ganglia</a>.</li>
+            <li>Tronco y pares craneales: <a href="https://www.ncbi.nlm.nih.gov/books/NBK544297/" target="_blank" rel="noopener noreferrer">Neuroanatomy, Brainstem</a>, <a href="https://www.ncbi.nlm.nih.gov/books/NBK470353/" target="_blank" rel="noopener noreferrer">Neuroanatomy, Cranial Nerve</a> y <a href="https://www.ncbi.nlm.nih.gov/books/NBK482283/" target="_blank" rel="noopener noreferrer">Neuroanatomy, Cranial Nerve 5 (Trigeminal)</a>.</li>
+            <li>Cerebelo: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7055440/" target="_blank" rel="noopener noreferrer">Current concepts of cross-sectional and functional anatomy of the cerebellum</a> y <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2873095/" target="_blank" rel="noopener noreferrer">Stoodley y Schmahmann (2010)</a>.</li>
+            <li>Sustancia blanca: <a href="https://doi.org/10.1038/s41467-022-32595-4" target="_blank" rel="noopener noreferrer">Yeh (2022)</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6080311/" target="_blank" rel="noopener noreferrer">Zhang et al. (2018)</a> y <a href="https://doi.org/10.1136/jnnp-2019-322375" target="_blank" rel="noopener noreferrer">Senova et al. (2020)</a>.</li>
+            <li>Vasos y meninges: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6126264/" target="_blank" rel="noopener noreferrer">The cerebral circulation and cerebrovascular disease I: Anatomy</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9179062/" target="_blank" rel="noopener noreferrer">Microsurgical Neurovascular Anatomy</a> y <a href="https://www.ncbi.nlm.nih.gov/books/NBK482257/" target="_blank" rel="noopener noreferrer">Neuroanatomy, Dural Venous Sinuses</a>.</li>
+            <li>Sistema ventricular e hipófisis: <a href="https://www.ncbi.nlm.nih.gov/books/NBK532932/" target="_blank" rel="noopener noreferrer">Neuroanatomy, Ventricular System</a> y <a href="https://www.ncbi.nlm.nih.gov/books/NBK425703/" target="_blank" rel="noopener noreferrer">Endotext, Development and Microscopic Anatomy of the Pituitary Gland</a>.</li>
+          </ul>
+        </details>
         <p class="warning">Modelo educativo. Las estructuras registradas desde atlas de neuroimagen son aproximadas y no deben utilizarse para planificación clínica o quirúrgica.</p>
       </div>
     </div>
   </div>
 
-  <script src="https://unpkg.com/three@0.137.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/three@0.137.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://unpkg.com/three@0.137.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script src="https://unpkg.com/three@0.137.0/examples/js/loaders/DRACOLoader.js"></script>
-  <script src="potentials-lab.js?v=50"></script>
-  <script src="crisis-route-data.js?v=60"></script>
-  <script src="crisis-tract-fibers.js?v=55"></script>
-  <script src="crisis-animation.js?v=60"></script>
-  <script src="app.js?v=61"></script>
+  <script>
+    (() => {
+      const loading = document.getElementById('loading');
+      const title = document.getElementById('loadingTitle');
+      const message = document.getElementById('loadingText');
+      const progress = document.getElementById('progressBar');
+      const help = document.getElementById('loadingHelp');
+      const retry = document.getElementById('retryAtlas');
+      let failed = false;
+      const timer = setTimeout(() => {
+        help.textContent = 'La carga está tardando más de lo esperado. Puedes reintentar con el servidor local abierto.';
+        help.hidden = retry.hidden = false;
+      }, 20000);
+
+      function stopMonitoring() {
+        clearTimeout(timer);
+        window.removeEventListener('error', handleScriptError, true);
+      }
+
+      function handleScriptError(event) {
+        if (event.target instanceof HTMLScriptElement && event.target.src) {
+          const path = new URL(event.target.src).pathname.split('/').pop();
+          startup.fail('Falta el archivo ' + path + '.', 'Extrae el ZIP completo y abre esa carpeta en Visual Studio Code.');
+        } else if (event instanceof ErrorEvent) {
+          startup.fail('El código del visor se detuvo.', event.message);
+        }
+      }
+
+      const startup = {
+        get failed() { return failed; },
+        stage(text, percent) {
+          if (failed) return;
+          message.textContent = text;
+          progress.style.width = percent + '%';
+        },
+        fail(text, guidance) {
+          if (failed) return;
+          failed = true;
+          stopMonitoring();
+          title.textContent = 'No se pudo abrir el atlas';
+          message.textContent = text;
+          help.textContent = guidance;
+          help.hidden = retry.hidden = false;
+          progress.parentElement.hidden = true;
+        },
+        finish(count) {
+          if (failed) return;
+          stopMonitoring();
+          startup.stage(count + ' estructuras cargadas', 100);
+          loading.classList.add('hidden');
+        }
+      };
+      window.AtlasStartup = startup;
+      retry.onclick = () => window.location.reload();
+      if (window.location.protocol === 'file:') {
+        startup.fail('El atlas necesita un servidor local.', 'En Visual Studio Code, haz clic derecho en index.html y elige Open with Live Server.');
+      } else {
+        window.addEventListener('error', handleScriptError, true);
+      }
+    })();
+  </script>
+  <script defer src="vendor/three/three.min.js"></script>
+  <script defer src="vendor/three/OrbitControls.js"></script>
+  <script defer src="vendor/three/GLTFLoader.js"></script>
+  <script defer src="vendor/three/DRACOLoader.js"></script>
+  <script defer src="potentials-lab.js?v=50"></script>
+  <script defer src="crisis-route-data.js?v=60"></script>
+  <script defer src="crisis-tract-fibers.js?v=55"></script>
+  <script defer src="anatomy-facts.js?v=61-anatomia"></script>
+  <script defer src="crisis-animation.js?v=61-anatomia"></script>
+  <script defer src="app.js?v=61-visual"></script>
 </body>
 </html>

@@ -23,7 +23,7 @@ Las superficies se convirtieron a formato GLB y se adaptaron al sistema de coord
 ## Código y bibliotecas
 
 - El visor Atlas ETM es una implementación educativa para mostrar la anatomía y simular la propagación de una crisis. El aviso Apache 2.0 de [LICENSE_ORIGINAL.txt](LICENSE_ORIGINAL.txt) corresponde al código de Brain Project.
-- Three.js Authors, [Three.js r137](https://github.com/mrdoob/three.js/tree/r137), incluidos OrbitControls, GLTFLoader y DRACOLoader. Se carga desde UNPKG para renderizar el atlas. [Licencia MIT](https://github.com/mrdoob/three.js/blob/r137/LICENSE).
+- Three.js Authors, [Three.js r137](https://github.com/mrdoob/three.js/tree/r137), incluidos OrbitControls, GLTFLoader y DRACOLoader. Se incluye en `vendor/three/` para ejecutar el atlas localmente. [Licencia MIT incluida](vendor/three/LICENSE.txt).
 - Google, [Draco](https://github.com/google/draco). Los archivos de `vendor/draco/` incluyen componentes para decodificar la geometría comprimida. [Licencia Apache 2.0 incluida con Draco](vendor/draco/LICENSE.txt).
 
 Los modelos y la animación se usan con fines educativos. La ubicación de las regiones registradas desde atlas de neuroimagen es aproximada. Las etapas y líneas de la animación son ilustrativas.
