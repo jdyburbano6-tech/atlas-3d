@@ -1,0 +1,461 @@
+:root{
+  --bg:#06101d;--panel:#0b1625;--panel2:#101f31;--line:#21334a;--text:#eef6ff;--muted:#8da3bb;
+  --accent:#64d6ff;--accent2:#a683ff;--good:#5de0a7;--warn:#ffc970;--danger:#ff7b8d;
+  --shadow:0 16px 50px rgba(0,0,0,.35);--radius:16px;
+}
+*{box-sizing:border-box}html,body,#app{width:100%;height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}button{color:inherit}.hidden{display:none!important}
+.topbar{position:fixed;z-index:30;left:0;top:0;right:0;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:linear-gradient(180deg,rgba(6,16,29,.98),rgba(6,16,29,.88));border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(16px)}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}.brand-mark{font-size:28px;filter:saturate(.8)}.brand h1{font-size:16px;line-height:1.15;margin:0;font-weight:760;letter-spacing:.01em}.brand p{font-size:11px;color:var(--muted);margin:4px 0 0}.top-actions{display:flex;gap:8px}.ghost{border:1px solid var(--line);background:#0d1b2b;padding:8px 11px;border-radius:10px;cursor:pointer}.ghost:hover{border-color:#42617f;background:#13263b}
+.sidebar{position:fixed;z-index:20;left:0;top:68px;bottom:0;width:342px;background:rgba(8,19,32,.96);border-right:1px solid var(--line);padding:14px;overflow:auto;backdrop-filter:blur(14px);transition:transform .25s ease}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#08131f;border:1px solid var(--line);padding:4px;border-radius:12px;margin-bottom:12px}.tab{border:0;background:transparent;color:var(--muted);padding:9px;border-radius:8px;cursor:pointer;font-weight:700}.tab.active{background:#17314a;color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.search-wrap{position:relative}.search-wrap input{width:100%;border:1px solid var(--line);background:#08131f;color:#fff;border-radius:12px;padding:12px 38px 12px 12px;outline:none}.search-wrap input:focus{border-color:#4ca5cd;box-shadow:0 0 0 3px rgba(100,214,255,.1)}.search-icon{position:absolute;right:13px;top:8px;font-size:22px;color:var(--muted)}
+.compact-block,section{margin-top:16px}.section-title{font-size:11px;color:#89a8c5;text-transform:uppercase;letter-spacing:.13em;font-weight:800;margin:0 0 8px}.segmented{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:#08131f;border:1px solid var(--line);border-radius:10px}.segmented button{border:0;background:transparent;padding:8px 4px;border-radius:7px;color:var(--muted);cursor:pointer;font-size:12px}.segmented button.active{background:#1b3750;color:#fff}
+/* Cada pestaña tiene un menu exclusivo. En V11 faltaba esta regla. */
+.tab-panel{display:none!important}
+.tab-panel.active{display:block!important}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.quick-grid.small button{font-size:11.5px;min-height:42px}.quick-grid button,.route-btn,.action-row button{border:1px solid var(--line);background:#0e1e2e;border-radius:10px;padding:9px 10px;cursor:pointer;text-align:left;transition:.18s}.quick-grid button:hover,.route-btn:hover,.action-row button:hover{border-color:#47708f;background:#14283b;transform:translateY(-1px)}
+.quick-grid button.active{border-color:#64d6ff;background:#17314a;box-shadow:0 0 0 1px rgba(100,214,255,.18) inset}
+.route-btn{width:100%;display:grid;grid-template-columns:24px 1fr;column-gap:6px;margin-bottom:7px}.route-btn span{grid-row:1/3;color:var(--accent);align-self:center}.route-btn b{font-size:12px}.route-btn small{color:var(--muted);font-size:10.5px;margin-top:3px}.model-note{font-size:10.5px;line-height:1.45;color:#8ea0b0;background:#0a1521;border-left:3px solid #39536b;padding:9px;margin:8px 0 0;border-radius:0 8px 8px 0}
+.category-list{display:flex;flex-direction:column;gap:6px}.category-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border:1px solid var(--line);background:#0d1a28;border-radius:9px;cursor:pointer}.category-item .left{display:flex;align-items:center;gap:8px}.category-item input{accent-color:#5bc8ef}.category-item small{color:var(--muted)}
+.bottom-controls{padding-top:14px;border-top:1px solid var(--line);margin-bottom:20px}.range-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}.range-label b{color:#dcefff}.bottom-controls input[type="range"]{width:100%;accent-color:#62d6ff}.action-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.action-row button{text-align:center;font-size:11px;padding:9px 4px}
+.search-results{margin-top:8px;border:1px solid var(--line);border-radius:10px;background:#07131f;max-height:280px;overflow:auto}.result-item{padding:9px 10px;border-bottom:1px solid #15283b;cursor:pointer}.result-item:last-child{border-bottom:0}.result-item:hover{background:#11263a}.result-item b{font-size:12px;display:block}.result-item small{font-size:10px;color:var(--muted)}
+.viewport{position:fixed;left:342px;right:310px;top:68px;bottom:0;background:radial-gradient(circle at 55% 40%,#14283b 0,#0a1726 38%,#050d17 76%);overflow:hidden}.viewport:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}#brainCanvas{width:100%;height:100%;display:block;touch-action:none}.viewport-toolbar{position:absolute;right:12px;top:12px;display:flex;gap:6px}.viewport-toolbar button,.mobile-menu{width:38px;height:38px;border:1px solid rgba(255,255,255,.12);background:rgba(8,19,32,.78);color:#fff;border-radius:10px;cursor:pointer;backdrop-filter:blur(10px)}.mobile-menu{display:none;position:absolute;left:12px;top:12px;z-index:4}.legend{position:absolute;left:16px;bottom:14px;display:flex;gap:12px;flex-wrap:wrap;padding:8px 10px;background:rgba(5,14,24,.65);border:1px solid rgba(255,255,255,.08);border-radius:10px;font-size:10px;color:#a8bbcd;backdrop-filter:blur(10px)}.legend span{display:flex;align-items:center;gap:5px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block}.dot.cortex{background:#c6aab5}.dot.deep{background:#f09cb8}.dot.white{background:#d4dce7}.dot.tract{background:#74d8f2}
+.route-banner{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;min-width:260px;max-width:70%;padding:10px 13px;border:1px solid rgba(100,214,255,.28);background:rgba(6,22,35,.88);border-radius:12px;box-shadow:var(--shadow);backdrop-filter:blur(12px);font-size:12px;text-align:center}.route-banner b{display:block;color:#8ce1ff;margin-bottom:3px}
+.info-panel{position:fixed;z-index:18;right:0;top:68px;bottom:0;width:310px;background:rgba(8,19,32,.96);border-left:1px solid var(--line);padding:18px;overflow:auto;backdrop-filter:blur(14px)}.info-empty{text-align:center;margin-top:38vh;transform:translateY(-50%);color:var(--muted)}.info-icon{font-size:34px;color:#4e6c86}.info-empty h2{font-size:15px;color:#dceafa}.info-empty p{font-size:11px;line-height:1.55}.info-kicker{text-transform:uppercase;letter-spacing:.12em;color:#69cdec;font-size:10px;font-weight:800;margin-bottom:8px}.info-panel h2{font-size:23px;line-height:1.1;margin:0 0 10px}.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:1px solid #29435a;background:#102235;color:#b8d1e5;padding:4px 7px;border-radius:999px;font-size:10px}.info-description{font-size:12px;line-height:1.55;color:#bdd0df;border-top:1px solid var(--line);padding-top:13px}.meta-list{font-size:11px}.meta-list>div{padding:9px 0;border-top:1px solid #182b3d}.meta-list dt{color:#6f879e;margin-bottom:3px}.meta-list dd{margin:0;color:#dceaf5;line-height:1.4}.group-members{margin-top:12px;padding:10px;background:#081521;border:1px solid var(--line);border-radius:10px}.group-members b{font-size:10px;color:#7fa0ba;text-transform:uppercase;letter-spacing:.09em}.group-members ul{padding-left:17px;margin:7px 0 0;font-size:11px;color:#c4d6e4}
+.loading-screen{position:fixed;z-index:100;inset:0;background:#06101d;display:flex;align-items:center;justify-content:center}.loading-card{width:min(360px,88vw);text-align:center}.brain-loader{font-size:48px;animation:pulse 1.5s ease-in-out infinite}.loading-card h2{margin:10px 0 4px}.loading-card p{color:var(--muted);font-size:12px}.progress{height:6px;background:#142639;border-radius:999px;overflow:hidden;margin-top:15px}.progress>div{height:100%;width:5%;background:linear-gradient(90deg,#5ecff5,#9b86ff);transition:width .2s}@keyframes pulse{50%{transform:scale(1.08);filter:brightness(1.2)}}
+.modal{position:fixed;z-index:120;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:18px}.modal-card{position:relative;max-width:620px;background:#0c1b2a;border:1px solid #2a4157;border-radius:16px;padding:22px;box-shadow:var(--shadow)}.modal-card h2{margin-top:0}.modal-card p{font-size:12px;line-height:1.6;color:#c1d0de}.modal-close{position:absolute;right:10px;top:10px;border:0;background:transparent;color:#fff;font-size:26px;cursor:pointer}.warning{border-left:3px solid var(--warn);padding-left:10px}
+@media(max-width:1050px){.info-panel{display:none}.viewport{right:0}}
+@media(max-width:760px){.topbar{height:58px;padding:0 10px}.brand h1{font-size:13px}.brand p{display:none}.brand-mark{font-size:23px}.top-actions .ghost:not(#btnFullscreen){display:none}.top-actions .ghost{font-size:0;width:36px;height:36px;padding:0}.top-actions #btnFullscreen:after{content:"⛶";font-size:16px}.sidebar{top:58px;width:min(88vw,342px);transform:translateX(-105%);box-shadow:var(--shadow)}.sidebar.open{transform:translateX(0)}.viewport{left:0;top:58px}.mobile-menu{display:block}.legend{left:12px;right:12px;justify-content:center}.route-banner{top:58px;max-width:90%;font-size:11px}.topbar{z-index:40}}
+
+/* Red neuronal */
+.tabs-three{grid-template-columns:1fr 1fr 1.15fr}.tabs-three .tab{font-size:12px;padding:8px 5px}
+
+.neural-legend{display:flex;align-items:center;gap:7px;color:var(--muted)}.n-dot{width:8px;height:8px;border-radius:50%;display:inline-block}.n-dot.exc{background:#d7e8f8}.n-dot.inh{background:#c89cff}
+
+.neural-readout{display:grid;gap:7px;margin:8px 0 10px}.neural-readout>div{display:flex;justify-content:space-between;gap:10px;background:#0a1828;border:1px solid var(--line);border-radius:9px;padding:8px 9px}.neural-readout span{color:var(--muted);font-size:11px}.neural-readout b{font-size:11px;text-align:right}
+.neural-primary{width:100%;border:1px solid #4f7493;background:linear-gradient(180deg,#173452,#10273e);border-radius:10px;padding:10px 9px;cursor:pointer;font-weight:700}.neural-primary:hover{border-color:#7bcceb}.neural-actions{margin-top:8px}.neural-note{margin-top:0}.check-row{display:flex;align-items:center;gap:8px;color:#cddceb;font-size:12px;margin-top:10px}.check-row input{accent-color:#64d6ff}.neural-steps article{border-left:2px solid #28445f;padding:2px 0 2px 10px;margin:9px 0}.neural-steps article b{font-size:12px}.neural-steps article p{font-size:11px;color:var(--muted);line-height:1.45;margin:3px 0 0}
+body.neural-mode .legend,body.neural-mode .route-banner{display:none!important}body.neural-mode #infoPanel{display:none}body.neural-mode .viewport{right:0}body.neural-mode .bottom-controls{display:none}
+@media(max-width:800px){.tabs-three .tab{font-size:11px}.neural-legend{display:none}}
+
+/* Anatomical tract exploration */
+.tract-toggle{width:100%;text-align:center;border-color:#55c8e8}.tract-toggle[aria-pressed=true]{background:#163847}
+#tractOptions{padding-top:10px}#tractOptions input[type=range],#tractSelect{width:100%}#tractSelect{background:#101f31;color:#eef6ff;border:1px solid #37536c;padding:9px;border-radius:8px;font-size:12px;margin-top:8px}#tractOptions .range-label{margin-top:12px}
+.tract-badge{position:absolute;left:16px;top:66px;padding:8px 10px;border:1px solid #33596a;border-radius:8px;background:#071421dd;color:#8ee3ed;font-size:10px;pointer-events:none;max-width:85%}
+.tract-tooltip{position:absolute;left:16px;bottom:65px;max-width:85%;padding:10px 12px;background:#0b1b2def;border:1px solid #64d6ff;border-radius:8px;font-size:12px;pointer-events:none}
+.tract-view .legend{display:none}.neural-mode #tractControls{display:none}
+
+
+/* Connectome overlay */
+.connectome-overlay{position:absolute;left:18px;top:18px;z-index:7;pointer-events:none}
+.connectome-chip{display:flex;flex-direction:column;gap:4px;padding:10px 12px;min-width:250px;max-width:min(420px,60vw);background:rgba(5,14,25,.82);border:1px solid rgba(117,233,255,.22);border-radius:12px;backdrop-filter:blur(12px);box-shadow:var(--shadow)}
+.connectome-chip b{font-size:12px;color:#9be8ff}.connectome-chip span{font-size:11px;color:#c9d8e4;line-height:1.4}
+body.neural-mode .connectome-overlay{display:block}
+@media(max-width:800px){.connectome-overlay{left:14px;top:14px;right:14px}.connectome-chip{max-width:none;min-width:0}}
+
+.neural-subpanel.hidden{display:none!important}
+.connectome-panel .quick-grid button{min-height:50px}
+.connectome-panel .quick-grid.small{grid-template-columns:1fr}
+.electrophys-panel .action-row{grid-template-columns:1fr 1fr}
+
+.connectome-select{width:100%;padding:9px;border:1px solid #35536a;border-radius:9px;background:#0b1f31;color:#e7f5ff;font-size:12px;margin-bottom:5px}
+body.neural-mode .viewport{background:radial-gradient(circle at 55% 40%,#111c36 0,#080e1c 54%,#050919 95%)}
+
+/* V9: navegación contextual y disección por capas intracraneales */
+.tabs-five{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin-bottom:12px}
+.tabs-five .tab{min-width:0;padding:9px 5px;font-size:11px;white-space:normal;line-height:1.2}
+.tabs-five .tab:nth-child(3){grid-column:1 / -1}
+body.neural-mode #anatomySearch,body.neural-mode #anatomyHemisphere,body.neural-mode #searchResults,body.head-mode #tractControls,body.head-mode #anatomyBottomControls{display:none!important}
+body.head-mode .route-banner,body.head-mode .legend{display:none!important}
+.head-warning{background:rgba(255,196,102,.07);border:1px solid rgba(255,196,102,.25);border-radius:10px;padding:12px;color:#dce8f3}
+.head-stage{border:1px solid #35556b;border-radius:12px;padding:12px;background:#0a2133;margin:10px 0 0}
+.head-stage span{display:block;color:#80d8f4;font-size:10px;margin-bottom:4px}
+.head-stage b{font-size:13px;color:#f2f9ff}
+.head-stage p{font-size:11px;color:#c3d5e4;line-height:1.5;margin:8px 0 0}
+.head-actions{grid-template-columns:repeat(3,1fr)}
+.head-layer-checks{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0 16px}
+.head-layer-checks label{display:flex;align-items:center;gap:8px;padding:8px 9px;background:#091b2b;border-radius:8px;font-size:11px;color:#d1e2ef}
+.head-layer-checks input{accent-color:#63d6e9}
+.head-wide-btn{width:100%;padding:10px;margin-top:12px;border-radius:10px;background:#15364c;border:1px solid #32627e;cursor:pointer;font-size:12px;color:#edf9ff}
+.phase-grid button{padding:9px 4px;background:#102d42;border:1px solid #315471;border-radius:8px;color:#e2effb;cursor:pointer;font-size:11px}
+.phase-grid button.active{background:#2c4d54;border-color:#d5c070;color:#fff4c0}
+body.head-mode #infoPanel{display:block}
+@media(max-width:1050px){body.head-mode #infoPanel{display:none}}
+
+/* V10: visor de cabeza externo por capas */
+#headAssetsStatus{font-size:11px;line-height:1.6;color:#bbd4ed;background:#0c2637;border-color:#244c5e}
+#headExternalChecks{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#headExternalChecks label{background:#0d2132;border:1px solid #274158;border-radius:8px;padding:10px 6px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px}
+#headExternalChecks input{accent-color:#62d6ff}
+#headSelectedStructure{font-size:12px;word-break:break-word}
+
+body.head-mode #anatomySearch,body.head-mode #anatomyHemisphere{display:none!important}
+body.neural-mode #anatomySearch,body.neural-mode #anatomyHemisphere{display:none!important}
+
+/* V11.7: el atlas de cabeza comparte el panel derecho de fichas anatómicas. */
+body.head-mode #infoPanel{display:block!important}
+body.head-mode .viewport{right:310px!important}
+@media(max-width:1050px){body.head-mode #infoPanel{display:none!important}body.head-mode .viewport{right:0!important}}
+.head-diagnostic{font-size:11px;line-height:1.6;color:#bacdde;white-space:pre-line}
+#headFit,#headFront,#headSide{padding:9px 7px;text-align:center;font-size:11px}
+
+/* V11.3: vistas cefalicas independientes y auditoria de nombres. */
+.head-presets{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 17px}
+.head-presets button{padding:12px 6px;background:#12314a;border:1px solid #31536d;border-radius:9px;color:#e5f4ff;cursor:pointer;font-size:12px}
+.head-presets button:hover,.head-presets button.active{background:#1a5272;border-color:#71c6f3}
+.head-name-audit{margin:4px 0 12px;border:1px solid #2b4560;border-radius:8px;padding:9px;color:#c9dcea;font-size:11px}
+.head-name-audit summary{cursor:pointer}
+.head-name-audit pre{max-height:190px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;font-size:10px}
+
+/* V11.5: límite cefálico regulable sin afectar el atlas cerebral. */
+.head-cut-control{margin:12px 0;padding:10px;border:1px solid #28485f;border-radius:10px;background:#0b2031}
+.head-cut-control input[type=range]{width:100%;accent-color:#64d6ff;cursor:pointer}
+.head-cut-control .model-note{margin-top:6px}
+
+.head-reference{margin-top:14px;font-size:11px;line-height:1.55;color:#91b8d5;}
+.head-reference a{color:#83d6fb;text-decoration:underline;text-underline-offset:3px;}
+#groupMembers p{font-size:11px;line-height:1.6;color:#d1e2ef;margin:6px 0 0;}
+
+/* V13: fichas anatómicas didácticas en español */
+.head-study-section{padding:9px 0;border-bottom:1px solid #20384b;}
+.head-study-section:last-child{border-bottom:0;}
+.head-study-section b{font-size:11px;letter-spacing:.01em;color:#70d1ee;text-transform:none;}
+.head-study-section p{font-size:12px;line-height:1.65;color:#d0dce6;margin:7px 0 2px;}
+.head-info-technical{border-top:1px solid #20384b;padding:10px 0;margin-top:8px;font-size:11px;color:#829db4;}
+.head-info-technical summary{cursor:pointer;color:#9db9cf;}
+.info-tech-label{font-size:10px;margin:10px 0 4px;}
+.info-tech-code{font-family:monospace;font-size:11px;overflow-wrap:anywhere;color:#a9bac8;}
+.head-reference a{font-size:11px;line-height:1.5;}
+
+/* V14: catálogo de osteología y accidentes anatómicos educativos */
+.head-bone-label{display:block;color:#a8cfe1;font-size:12px;margin:10px 0 6px}
+.head-bone-select{display:block;width:100%;border-radius:8px;padding:9px 10px;background:#10283c;border:1px solid #41647b;color:#e9f6ff;font-size:12px;margin:0 0 8px}
+.head-landmarks-panel{margin:15px 0;padding:12px;background:#0c2637;border:1px solid #35596f;border-radius:12px}
+.head-landmark-heading{font-size:14px;line-height:1.35;color:#ddf5ff;margin:0 0 7px}
+.head-landmark-note,.head-landmark-ref{font-size:11px;line-height:1.5;color:#b2cadb;margin:7px 0 10px}
+.head-landmark-ref{border-top:1px solid #294558;padding-top:10px;margin-top:10px}
+.head-landmark-ref a{color:#7dd5ef}
+.head-landmark-input{width:100%;padding:8px;background:#091a29;border:1px solid #39556a;color:#f3fbff;border-radius:8px;font-size:11px;box-sizing:border-box}
+.head-landmark-list{display:flex;flex-wrap:wrap;gap:5px;margin:9px 0;max-height:205px;overflow:auto}
+.head-landmark-button{background:#132b3c;border:1px solid #33536a;border-radius:7px;color:#d3e6f3;font-size:10px;padding:6px 8px;text-align:left;cursor:pointer}
+.head-landmark-button[aria-pressed="true"]{color:#061827;background:#8ad8eb;border-color:#8ad8eb;font-weight:700}
+.head-landmark-detail{background:#091926;border:1px solid #3b6178;border-radius:10px;padding:11px;margin-top:8px}
+.head-landmark-detail-title{font-size:13px;color:#bcecfb}
+.head-landmark-detail p{font-size:12px;line-height:1.55;color:#d2e3ed;margin:7px 0 10px}
+.head-landmark-subhead{display:block;font-size:11px;color:#78c8e5}
+
+/* V15: referencia 2D anclada al centro del HUESO, no del accidente (no validado). */
+.head-focus-overlay{position:absolute;top:70px;left:16px;z-index:8;max-width:min(360px,calc(100% - 40px));background:rgba(6,19,33,.93);border:1px solid #3e8096;border-radius:13px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:auto}
+.head-focus-kicker{font-size:9px;letter-spacing:.11em;color:#78d4ef;font-weight:800;margin-bottom:5px}
+.head-focus-overlay b{font-size:15px;color:#fff}
+.head-focus-overlay p{font-size:11px;color:#d2e7f2;margin:6px 0 10px;line-height:1.45}
+.head-focus-overlay button{border:1px solid #4f91a8;background:#183a51;color:#ebfaff;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:11px}
+.head-focus-overlay button:hover{background:#24526e}
+.head-focus-marker{position:absolute;z-index:5;pointer-events:none;transform:translate(-50%,-50%);width:30px;height:30px;border:2px solid #43ddff;border-radius:50%;background:rgba(11,44,59,.12);box-shadow:0 0 0 6px rgba(67,221,255,.17),0 0 18px rgba(56,222,255,.6)}
+.head-focus-crosshair:before,.head-focus-crosshair:after{content:"";position:absolute;background:#53e3ff;left:50%;top:50%;transform:translate(-50%,-50%)}
+.head-focus-crosshair:before{width:19px;height:1px}.head-focus-crosshair:after{width:1px;height:19px}
+.head-focus-marker-text{position:absolute;top:36px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;font-weight:800;letter-spacing:.08em;color:#a8eeff;background:rgba(5,19,31,.85);padding:5px 8px;border:1px solid #387d93;border-radius:6px}
+.head-landmark-location-warning{padding:8px;border-left:2px solid #4e879c;background:#10283a;color:#a8cede!important;font-size:10px!important}
+@media(max-width:680px){.head-focus-overlay{top:58px;left:8px;max-width:calc(100% - 16px)}.head-focus-marker-text{font-size:8px}}
+
+/* V16: marcador situado en la superficie o vértice de la región anatómica buscada.
+   Su posición es orientativa y no una anotación anatómica validada. */
+.head-focus-marker{border-color:#ffbc58;box-shadow:0 0 0 6px rgba(255,188,88,.17),0 0 20px rgba(255,188,88,.62)}
+.head-focus-crosshair:before,.head-focus-crosshair:after{background:#ffe0a2}
+.head-focus-marker-text{color:#fff0d1;border-color:#a97828;background:rgba(43,29,6,.95);max-width:min(280px,65vw);white-space:normal;text-align:center;line-height:1.3}
+#headFocusCalibrate{background:#3b3030;border-color:#977d60;color:#ffecd1;margin-right:6px}
+#headFocusCalibrate:hover{background:#614a37}
+
+/* V17: la señal principal sigue la superficie real de la malla. */
+.head-focus-type{display:inline-flex;align-items:center;color:#d5e2ec;background:#1a293a;border:1px solid #465e73;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:700;margin:0 0 10px}
+.head-focus-marker{width:13px;height:13px;box-shadow:0 0 0 4px rgba(255,188,88,.12),0 0 13px rgba(255,188,88,.45);border-width:1px}
+.head-focus-crosshair:before{width:9px}.head-focus-crosshair:after{height:9px}
+.head-focus-marker-text{display:none}
+
+.head-focus-area{display:flex;flex-direction:column;gap:4px;margin:1px 0 12px;color:#c7e8e6;font-size:10px}
+.head-focus-area span{display:flex;justify-content:space-between;gap:10px}
+.head-focus-area output{color:#b6ffeb;font-weight:bold}
+.head-focus-area input{width:100%;accent-color:#5fe0ba;cursor:pointer}
+.head-focus-area.hidden{display:none}
+
+/* V20: editor de segmentación geométrica sobre triángulos del GLB. */
+.head-segment-panel{margin:10px 0;border-top:1px solid #426778;padding-top:9px;display:flex;flex-direction:column;gap:7px}
+.head-segment-panel.hidden{display:none}
+.head-segment-panel strong{font-size:12px;color:#a4f9e8}
+.head-segment-panel p,.head-segment-panel small{font-size:10px;color:#c8dfdf;margin:0;line-height:1.45}
+.head-segment-row{display:flex;gap:5px;flex-wrap:wrap}
+.head-focus-overlay .head-segment-row button{padding:7px 8px;font-size:10px}
+.head-focus-overlay .head-segment-row button[aria-pressed="true"]{background:#10655d;border-color:#6ff5d7;color:#fff}
+.head-segment-panel input[type=range]{width:100%;accent-color:#64efd1}
+
+.head-focus-overlay{max-height:calc(100% - 92px);overflow-y:auto;scrollbar-width:thin}
+
+/* V21: no exponer pinceles en el estudio normal de anatomía. */
+#headSegmentPanel{display:none!important}
+
+
+/* V27: pestaña independiente para animación de propagación (no tractografía clínica). */
+.tabs-six .tab:nth-child(6){grid-column:1 / -1;background:#103047;border:1px solid #255472}
+.tabs-six .tab:nth-child(6).active{background:#1c5264;border-color:#57c3db}
+#tab-crisis section{margin:12px 0 16px}
+.crisis-intro{padding-top:4px}
+.crisis-readout{display:flex;align-items:center;justify-content:space-between;gap:7px;background:#0f2637;padding:11px;border-radius:10px;margin-top:10px;font-size:10px;color:#a9d3ee}
+.crisis-readout b{color:#6ce4de}
+.crisis-controls-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:7px 0}
+.crisis-controls-row button,.crisis-config-row select{font-family:inherit;color:#e8f7ff;background:#10283b;border:1px solid #30566d;border-radius:9px;padding:10px 8px;cursor:pointer}
+.crisis-controls-row button:hover,.crisis-step:hover{background:#17415a;border-color:#68d3e7}
+.crisis-controls-row .crisis-main-button{background:#205a67;border-color:#5aa7b6;font-weight:700}
+.crisis-label{display:flex;justify-content:space-between;gap:12px;margin-top:16px;font-size:11px;color:#b8d0df}
+#crisisTimeline{width:100%;margin:11px 0 14px;accent-color:#55dfdd;cursor:pointer}
+.crisis-config-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:9px 0;font-size:11px;color:#b6cee0}
+.crisis-config-row select{min-width:132px;padding:7px}
+.crisis-check{display:flex;gap:10px;align-items:flex-start;background:#0e2132;padding:9px;border:1px solid #284055;border-radius:10px;font-size:11px;margin:5px 0;cursor:pointer}
+.crisis-check input{margin-top:3px;accent-color:#5ae7dc}
+.crisis-check small{display:block;color:#92afc3;line-height:1.4;margin-top:4px}
+.crisis-step-list{display:grid;grid-template-columns:1fr;gap:5px}
+.crisis-step{font-family:inherit;display:flex;align-items:center;gap:9px;width:100%;border:1px solid #274055;background:#0e2030;border-radius:8px;padding:9px;color:#a9c1d2;font-size:11px;text-align:left;cursor:pointer}
+.crisis-step span{display:grid;place-items:center;width:23px;height:23px;flex:none;border-radius:50%;border:1px solid #4a6675;color:#c7e2ea}
+.crisis-step.current{background:#154052;border-color:#5ad8da;color:#efffff}
+.crisis-step.current span{background:#60cfd4;color:#05202d;font-weight:800}
+.crisis-step.passed{border-color:#285f65;color:#92d3c8}
+.crisis-info{margin:0}.crisis-info h2{margin:2px 0 12px;font-size:21px;line-height:1.22}
+.crisis-step-meta{font-size:11px;color:#98bacc;display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #29465b}
+.crisis-step-meta b{color:#72dcd7}
+.crisis-info-card{background:#0d2030;border:1px solid #264458;border-radius:11px;padding:11px;margin:11px 0}
+.crisis-info-card h3{font-size:12px;color:#7edce2;margin:0 0 7px}
+.crisis-info-card p{font-size:11px;line-height:1.6;color:#cbddeb;margin:6px 0}
+.crisis-legend-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.crisis-scene-badge{position:absolute;top:17px;left:16px;z-index:4;max-width:min(70%,450px);background:rgba(5,22,32,.87);border:1px solid #285b70;color:#bce7e9;padding:8px 12px;border-radius:10px;font-size:10px;pointer-events:none}
+body.crisis-mode #tractBadge,body.crisis-mode #tractTooltip,body.crisis-mode #headFocusOverlay,body.crisis-mode #headFocusMarker{display:none!important}
+@media (max-width:760px){.crisis-scene-badge{top:54px;left:12px;right:12px;max-width:none}}
+
+body.crisis-mode #anatomyBottomControls,body.crisis-mode .legend{display:none!important}
+body.crisis-mode .sidebar{scroll-behavior:smooth}
+
+/* V29: cámara de viaje y una sola etiqueta externa al volumen cerebral. */
+.crisis-focus-caption{
+  position:absolute;left:50%;bottom:24px;z-index:9;transform:translateX(-50%);
+  width:max-content;max-width:min(84%,400px);padding:8px 20px 9px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;
+  border-radius:12px;border:1px solid rgba(82,203,212,.42);
+  background:linear-gradient(180deg,rgba(4,20,33,.9),rgba(4,25,37,.78));
+  box-shadow:0 4px 22px rgba(0,0,0,.26);pointer-events:none;
+  color:#eaffff;font-family:inherit;
+}
+.crisis-focus-caption.hidden{display:none!important}
+.crisis-focus-caption .crisis-focus-step{font-size:9px;letter-spacing:1.6px;font-weight:700;color:#5bdbe1}
+.crisis-focus-caption strong{font-size:16px;line-height:1.15;font-weight:800}
+.crisis-focus-caption .crisis-focus-side{font-size:9px;letter-spacing:.6px;color:#9db8c9}
+.crisis-focus-caption small{font-size:10px;color:#d6edec}
+@media(max-width:760px){.crisis-focus-caption{bottom:14px;padding:7px 12px}.crisis-focus-caption strong{font-size:13px}}
+
+.crisis-version-label{font-size:10px!important;color:#7de6e3!important;letter-spacing:.45px;background:rgba(26,75,82,.18);border-left:2px solid #62d1d4;padding:7px 10px;margin:2px 0 9px!important}
+
+/* V30: claridad de la auditoría por estructura */
+.anatomy-audit-note{font-size:11px;line-height:1.55;color:#a9c5d8;border-left:3px solid #476d87;padding:10px;background:#0c2131;border-radius:0 7px 7px 0;margin:10px 0}.anatomy-audit-note[data-priority="high"]{border-left-color:#efb76a;color:#e5cfa9;background:#231c19}
+
+/* V31 · visor multiescala: esquemas autónomos, NO mallas de brain.glb */
+.tabs-six .tab:nth-child(7){grid-column:1 / -1;background:#102737;border:1px solid #376176}
+.tabs-six .tab:nth-child(7).active{background:#1d5563;border-color:#70d3e4}
+.scales-mode-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:12px 0}
+.scales-mode-buttons button{background:#0b2030;border:1px solid #34556a;padding:9px 3px;border-radius:9px;color:#d1e8ee;font-size:11px;cursor:pointer}
+.scales-mode-buttons button.active{background:#145062;border-color:#7ce4e7;color:#fff;font-weight:700}
+#tab-scales section{margin:0 0 18px}
+#tab-scales label{font-size:11px;color:#a0baca}
+.scales-select{display:block;width:100%;color:#eaf7ff;background:#0a2030;border:1px solid #396077;border-radius:9px;padding:10px;margin:9px 0 12px;font-size:12px}
+.scales-download{display:block;text-align:center;text-decoration:none;background:#153b50;border:1px solid #3a7187;color:#d5f4fb;border-radius:10px;padding:12px 8px;font-size:12px}
+.scales-info .scales-state-tag{display:inline-block;color:#93cfe0;background:#153148;border:1px solid #2d6078;border-radius:20px;padding:5px 9px;font-size:10px;margin-bottom:10px}
+.scales-info-box{background:#0a2334;border:1px solid #244659;border-radius:11px;margin:13px 0;padding:12px;font-size:11px}
+.scales-info-box b{color:#84e4ec}.scales-info-box p{color:#c3d8e7;line-height:1.55}
+.scales-viewer{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:stretch;background:radial-gradient(circle at 45% 37%,#153347 0%,#071624 65%);padding:24px;overflow:auto}
+.scales-viewer-top{max-width:900px;margin:0 auto;width:100%}
+.scales-eyebrow{font-size:10px;color:#81e3f1;letter-spacing:.12em;font-weight:800}
+.scales-viewer h2{font-size:22px;margin:8px 0;color:#f4f8fa}
+.scales-viewer-top p{font-size:11px;color:#b1c9d8;line-height:1.5;margin:4px 0}
+.scales-viewer-diagram{width:100%;max-width:960px;min-height:260px;flex:1;display:flex;align-items:center;justify-content:center;margin:0 auto}
+.scales-svg{display:block;width:100%;max-height:min(70vh,620px)}
+.scales-hotspot{cursor:pointer;transition:filter .15s ease;outline:none}.scales-hotspot:hover,.scales-hotspot:focus{filter:brightness(1.35)}.scales-hotspot.selected{filter:brightness(1.25)}
+.scales-viewer-bottom{max-width:960px;width:100%;margin:0 auto;border:1px solid #294b60;border-radius:12px;background:#0b2635;padding:11px 14px}
+.scales-viewer-bottom p{font-size:12px;line-height:1.6;margin:2px 0;color:#e3f5f6}
+.scales-viewer-bottom small{font-size:10px;color:#8daebe}
+body.scales-diagram-mode #brainCanvas{visibility:hidden}
+body.scales-diagram-mode .viewport .legend,body.scales-diagram-mode .viewport-toolbar,body.scales-diagram-mode #tractBadge,body.scales-diagram-mode #connectomeOverlay,body.scales-diagram-mode #routeBanner{display:none!important}
+body.scales-diagram-mode #anatomyBottomControls,body.scales-diagram-mode #tractControls{display:none!important}
+@media(max-width:800px){.scales-viewer{padding:12px}.scales-viewer h2{font-size:17px}.scales-viewer-diagram{min-height:200px}.scales-svg{max-height:58vh}}
+
+/* V32: inspección geométrica sin modificación de mallas */
+.scales-section-panel{margin:12px 0;padding:12px;border:1px solid #315b6c;border-radius:12px;background:#0b2231}
+.scales-section-panel label{display:block;color:#d5eef5;font-size:12px;margin:10px 0 5px}
+.scales-section-panel .scales-section-check{display:flex;align-items:center;gap:8px;cursor:pointer}
+.scales-section-check input{accent-color:#64d6dc;width:16px;height:16px}
+.scales-cut-slider{width:100%;accent-color:#64d6dc}
+.scales-section-panel output{float:right;color:#92e4eb}
+
+/* V34 · Áreas corticales integradas sin sustituir los controles de V32 */
+.v34-cortex-panel{background:linear-gradient(135deg,rgba(33,85,100,.22),rgba(46,52,92,.18));border:1px solid rgba(119,198,207,.32);border-radius:13px;padding:13px!important;margin-bottom:14px}
+.v34-title-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.v34-title-row small{display:block;color:#a8bac8;font-size:11px;line-height:1.4}.v34-pill{border-radius:99px;border:1px solid #58747b;padding:4px 9px;color:#9fe4dc;font-size:11px;white-space:nowrap}
+.v34-mode-switch{margin:14px 0 7px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px;border:1px solid #486575;border-radius:12px;background:rgba(13,28,42,.55);cursor:pointer}.v34-mode-switch span:first-child{flex:1}.v34-mode-switch small{display:block;font-size:11px;color:#9cbbcd;margin-top:3px;line-height:1.4}.v34-mode-switch input{position:absolute;opacity:0;pointer-events:none}.v34-slider{width:48px;height:27px;background:#3d4c5c;border-radius:99px;flex:none;position:relative;transition:.2s}.v34-slider:before{content:'';position:absolute;left:4px;top:4px;width:19px;height:19px;border-radius:50%;background:white;transition:.2s}.v34-mode-switch input:checked+.v34-slider{background:#399ea2}.v34-mode-switch input:checked+.v34-slider:before{transform:translateX(21px)}.v34-mode-switch:focus-within{outline:2px solid #78e5e0}
+.v34-mode-text{font-size:12px;line-height:1.6;color:#d1dee7;margin:7px 0 12px}.v34-field{font-size:12px;font-weight:600;display:block;margin-bottom:5px;color:#d1e4e9}.v34-area-select{width:100%;background:#0d2233;border:1px solid #4b6475;color:#e9f4ff;border-radius:8px;padding:9px;font-size:12px}.v34-grid-buttons{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.v34-grid-buttons button{font-size:12px;padding:9px 5px}.v34-check{display:flex;gap:8px;align-items:center;font-size:12px;margin:12px 0}.v34-note{font-size:11px;line-height:1.5;color:#e6cfa7;background:rgba(74,64,29,.28);border-left:3px solid #d3b469;padding:9px}.v34-caveat{margin-top:10px;color:#a8bdca;font-size:11px}.v34-caveat summary{cursor:pointer}.v34-caveat p{line-height:1.5}
+.v34-floating-label{position:absolute;z-index:14;pointer-events:none;background:rgba(6,23,35,.91);border:1px solid #9ae3e4;border-radius:8px;padding:6px 11px;color:#effcff;box-shadow:0 6px 20px rgba(0,0,0,.35);font:600 12px/1.35 system-ui,sans-serif;transform:translate(-50%,-145%);max-width:250px;white-space:normal;text-align:center}
+.meta-list .v34-detail dd{line-height:1.55}
+@media(max-width:700px){.v34-grid-buttons{grid-template-columns:1fr}.v34-floating-label{font-size:10px;max-width:140px}}
+
+/* V35 · Comparación anatómica sin alterar las geometrías fuente */
+.v35-align-panel{border:1px solid rgba(101,197,224,.45);border-radius:11px;background:rgba(7,36,54,.56);padding:11px;margin-top:12px}
+.v35-align-panel .section-title{font-size:11px;margin-bottom:6px;color:#9ce7ea;text-transform:uppercase;letter-spacing:.05em}
+.v35-align-text{font-size:11px;color:#c0d8e4;line-height:1.6;margin:3px 0 7px}
+.v35-align-quality{font-size:11px;color:#b5e4dc;line-height:1.65;border-left:3px solid #63c8bc;background:rgba(18,69,75,.25);padding:7px 9px;margin:10px 0}
+.v35-align-warning{font-size:11px;color:#edcea1;line-height:1.6;margin:8px 0 0}
+
+/* V37: la corteza clínica de referencia viene del sujeto MRI, no de la V32. */
+.v35-align-panel{border-color:rgba(87,200,217,.50)}
+.v35-align-panel strong{color:#c5f1ef}
+
+/* V38: controles de registro y comprobación sin ampliar la barra lateral */
+.v38-register-controls{display:flex;flex-direction:column;gap:9px;margin:10px 0 12px;padding:10px;border:1px solid rgba(102,194,210,.28);border-radius:9px;background:rgba(3,20,30,.20)}
+.v38-register-controls .v34-check{font-size:12px;line-height:1.5;display:flex;align-items:flex-start;gap:8px}
+.v38-register-controls input{margin-top:3px;flex-shrink:0}
+
+
+  .v39-internal-panel{margin:12px 0;padding:12px;border:1px solid rgba(91,178,216,.35);border-radius:12px;background:rgba(20,54,74,.36)}
+  .v39-layer-list{display:grid;grid-template-columns:1fr;gap:7px;margin:10px 0;color:#dcebf2;font-size:.86rem}
+  .v39-layer-list label{display:flex;align-items:center;gap:9px;cursor:pointer}
+  .v39-layer-list input{accent-color:#6ddfe8;width:16px;height:16px}
+  details.v35-align-panel>summary{cursor:pointer;margin:0 0 6px}
+
+
+.connectome-timeline{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;pointer-events:auto}
+.connectome-chip .connectome-route-detail{color:#afcbd9}
+[data-connectome-pattern="crisis"]{font-weight:700}
+.connectome-timeline button{min-width:34px;min-height:32px;border-radius:8px;border:1px solid #395165;background:#101f2f;color:#c6d6e5;cursor:pointer;font-variant-numeric:tabular-nums}
+.connectome-timeline button.visited{color:var(--stage-color);border-color:var(--stage-color)}
+.connectome-timeline button[aria-current=step]{background:var(--stage-color);border-color:var(--stage-color);color:#0b1521;font-weight:700}
+.connectome-timeline button:focus-visible{outline:2px solid #d8edff;outline-offset:2px}
+.connectome-timeline button:disabled{opacity:.55;cursor:default}
+#connectomeProgress{width:100%;height:5px;margin-top:4px;accent-color:#79d8f2}
+@media(max-width:800px){.connectome-overlay{top:58px;right:auto;max-width:min(350px,calc(100% - 28px))}}
+
+/* Circuito sináptico */
+.potential-mode .viewport-toolbar,.potential-mode #btnAuto{display:none}
+.potentials-workspace{position:absolute;inset:0;overflow:auto;padding:20px clamp(12px,3vw,42px) 24px}
+.lab-view{width:min(100%,1120px);margin-inline:auto;display:grid;gap:12px}
+.lab-card{min-width:0;padding:14px clamp(12px,2vw,22px);border:1px solid #2a475e;border-radius:11px;background:#0a1b2c}
+.lab-card-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 10px;margin-bottom:8px}
+.lab-card-heading h2,.lab-sidebar h2{margin:0;font-size:16px;line-height:1.35;color:#ebf6ff}
+.lab-card-heading span{font-size:12px;color:#aec8db}
+.lab-card svg{display:block;width:100%;height:auto;margin:auto}
+.lab-circuit-card svg{max-height:325px;background:repeating-linear-gradient(0deg,transparent 0 25px,#35557036 26px),repeating-linear-gradient(90deg,transparent 0 25px,#35557036 26px),radial-gradient(ellipse at 48% 43%,#122e45,#0b1c2d 68%);border-radius:7px}
+.lab-detail-card svg{max-height:190px;background:#0b1d30;border-radius:7px}
+.lab-chart svg{max-height:310px}
+.lab-status{margin:7px 0 0;min-height:1.4em;color:#c9e9f5;font-size:13px;line-height:1.4}
+.lab-detail-caption,.lab-sidebar p{margin:8px 0 0;color:#afc6d8;font-size:13px;line-height:1.4}
+.lab-sidebar .lab-inhibit-status{margin-top:7px;color:#dbbff1}
+.lab-transport{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0}
+.lab-transport button,.lab-sidebar #labInhibit,.lab-detail-controls button{padding:8px 10px;border:1px solid #365875;border-radius:7px;background:#12273c;color:#e3effb;cursor:pointer}
+.lab-transport #labStimulate{grid-column:1/-1;background:#99def2;color:#102839;border-color:#a9ecfa;font-weight:700}
+.lab-transport button:disabled{opacity:.56;cursor:default}
+.lab-sidebar #labInhibit{width:100%;color:#ecdfff;border-color:#715e91;background:#30243e}
+.lab-sidebar #labInhibit[aria-pressed=true],.lab-detail-controls [data-lab-detail=inh][aria-pressed=true]{color:#f2e5ff;border-color:#d5aafd;background:#47355f}
+.lab-detail-controls{display:flex;gap:5px}
+.lab-detail-controls button{padding:5px 10px;font-size:12px}
+.lab-detail-controls [aria-pressed=true]{border-color:#8fdaec;background:#1a3e53}
+.lab-transport button:focus-visible,.lab-sidebar button:focus-visible,.lab-detail-controls button:focus-visible{outline:2px solid #8ee7ff;outline-offset:2px}
+.lab-legend{display:flex;flex-wrap:wrap;gap:8px 15px;margin-top:12px;color:#c2d8e9;font-size:12px}
+.lab-legend span{display:inline-flex;align-items:center;gap:6px}
+.lab-legend .lab-key{width:13px;height:3px;display:inline-block;background:#80dcef}
+.lab-legend .lab-key.inh{background:#cfadf9}
+.lab-route{opacity:.65}
+.lab-axon,.lab-direction{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.lab-direction{stroke-width:2.1}
+.lab-route.route-transmitting{opacity:1}
+.lab-route.route-transmitting .lab-axon{stroke-width:4}
+.lab-terminal,.lab-sheath{fill:url(#labSheath);stroke:#a9cce4;stroke-width:1}
+.lab-route.route-release .lab-terminal{stroke:var(--route-color);stroke-width:3}
+.lab-signal{stroke:#f5fbff;stroke-width:1.8}
+.lab-neuron .lab-arbor{fill:none;stroke:#77abc6;stroke-width:2.45;stroke-linecap:round}
+.lab-neuron.is-inhibitory .lab-arbor{stroke:#a890c8}
+.lab-neuron .neuron-soma{fill:url(#labSoma);stroke:#b9d8e9;stroke-width:1.45}
+.lab-neuron.is-inhibitory .neuron-soma{fill:url(#labInhibitorySoma);stroke:#d5b4ef}
+.lab-neuron.neuron-firing .neuron-soma{stroke:var(--node-color);stroke-width:4}
+.lab-neuron.neuron-inhibited .neuron-soma{stroke:#d3adff;stroke-width:4}
+.lab-neuron .neuron-nucleus{fill:#274b69;stroke:#7eafcf;stroke-width:.8}
+.neuron-nucleolus{fill:#bbebfc}
+.lab-diagram-label{fill:#e1eef8;font-weight:650;font-size:15px}
+.lab-diagram-caption{fill:#cbdeeb;font-size:13px}
+.lab-post-membrane{fill:#1b3852;stroke:#92cce4;stroke-width:2}
+.lab-bouton{fill:url(#labMembrane);stroke:#a0cfe6;stroke-width:2}
+.lab-inner-membrane,.lab-callout,.lab-calcium-channel,.lab-detail-receptor{fill:none;stroke:#91cde8;stroke-width:1.6;stroke-linecap:round}
+.lab-inner-membrane,.lab-callout{opacity:.55}
+.lab-calcium-channel{stroke:#a9edf1;stroke-width:3}
+.lab-detail-receptor{stroke-width:4.2}
+.lab-vesicle{fill:#326582;stroke:#b7e6f5;stroke-width:1.5}
+.lab-vesicle-content{fill:#bcf5ff}
+.lab-transmitter{fill:#ffcf71}
+.lab-detail-inh .lab-transmitter{fill:#ddb6ff}
+.lab-detail-bound .lab-detail-receptor{stroke:#ffcf71}
+.lab-detail-inh.lab-detail-bound .lab-detail-receptor{stroke:#ddb6ff}
+.plot-grid{stroke:#264055;stroke-width:1}
+.plot-threshold{stroke:#9eafc3;stroke-width:1;stroke-dasharray:4 4}
+.plot-label{font-size:14px;font-weight:700}
+.plot-trace{fill:none;stroke-width:2.1;stroke-linejoin:round}
+.plot-scale{fill:#bbcfdf;font-size:13px;font-variant-numeric:tabular-nums}
+.plot-cursor{stroke:#c5d9e7;stroke-width:1;opacity:.5}
+.lab-threshold-key::before{content:'';display:inline-block;width:17px;border-top:1px dashed #9eafc3;vertical-align:middle;margin-right:6px}
+.lab-chart .range-label{margin:8px 0 4px;color:#d4e7f5}
+.lab-chart input[type=range]{width:100%;accent-color:#7bcfea}
+.lab-chart output{color:#99e1f1;font-variant-numeric:tabular-nums}
+@media(max-width:760px){.potentials-workspace{padding-top:54px}.lab-card{padding:10px}.lab-circuit-card svg{min-height:134px}.lab-detail-card svg{min-height:94px}}
+.lab-calcium{fill:#7df0da;stroke:#b8ffef;stroke-width:.7}
+
+/* Controles y marcadores del recorrido de crisis */
+.crisis-route-panel{position:absolute;z-index:9;bottom:12px;left:12px;right:12px;display:grid;gap:7px;max-width:1050px;margin-inline:auto;pointer-events:none}
+.crisis-route-panel .crisis-focus-caption{position:static;transform:none;width:fit-content;max-width:100%;margin-inline:auto;padding:6px 12px 7px;text-align:center;gap:3px;border-radius:9px}
+.crisis-route-panel .crisis-focus-caption strong{font-size:clamp(12px,1.3vw,16px)}
+.crisis-route-panel .crisis-focus-caption small:empty{display:none}
+.crisis-route-actions,.crisis-stops{display:flex;justify-content:center;flex-wrap:wrap;gap:5px}
+.crisis-stops[hidden]{display:none}
+.crisis-route-actions button,.crisis-stops button,.crisis-route-timeline button{pointer-events:auto;color:#d8e8f4;background:#101f30;border:1px solid #36546b;border-radius:7px;padding:5px 7px;font-size:11px;cursor:pointer}
+.crisis-route-actions #crisisViewportPlay,.crisis-route-actions button[aria-pressed=true],.crisis-stops button[aria-current=step]{border-color:#8be3ed;background:#1b4b5a;color:#f0fcff}
+.crisis-route-timeline{display:flex;gap:4px;overflow-x:auto;pointer-events:auto;padding:4px;border:1px solid #294a60;border-radius:9px;background:#081726;scrollbar-color:#497087 #102035;scrollbar-width:thin}
+.crisis-route-timeline button{display:flex;align-items:center;text-align:left;flex:1 0 auto;gap:4px;min-height:30px}
+.crisis-route-timeline button span{padding-inline:3px;font-weight:800;color:#a6b9cc;font-variant-numeric:tabular-nums}
+.crisis-route-timeline button.passed span,.crisis-route-timeline button[aria-current=step] span{color:var(--stage-color)}
+.crisis-route-timeline button[aria-current=step]{border-color:var(--stage-color);background:#173147;color:#fff}
+.crisis-world-labels{position:absolute;inset:0;z-index:8;pointer-events:none}
+.crisis-world-labels>*{position:absolute;transform:translate(-50%,-50%);white-space:nowrap}
+.crisis-world-labels span{padding:4px 7px;border:1px solid #74c8e1;border-radius:6px;background:#0b1d2c;color:#dbf5fa;font-size:11px;font-weight:700}
+.crisis-world-labels button{pointer-events:auto;min-width:25px;height:25px;border:1px solid var(--stage-color);border-radius:50%;background:#071a26;color:var(--stage-color);font-size:12px;font-weight:800;cursor:pointer}
+.crisis-route-panel button:focus-visible,.crisis-world-labels button:focus-visible{outline:2px solid #d0f0ff;outline-offset:1px}
+@media(max-width:760px){.crisis-route-panel{bottom:7px;left:7px;right:7px;gap:4px}.crisis-route-panel .crisis-focus-caption{padding:5px 8px}.crisis-route-panel button{font-size:10px}}
+
+
+.crisis-speed{
+  pointer-events:auto;display:inline-flex;align-items:center;gap:6px;
+  padding:3px 5px 3px 8px;border:1px solid #36546b;border-radius:7px;
+  background:#101f30;color:#d8e8f4;font-size:11px;white-space:nowrap
+}
+.crisis-speed select{
+  font:inherit;color:#eafaff;background:#152d42;
+  border:1px solid #42647d;border-radius:5px;padding:3px;cursor:pointer
+}
+.crisis-speed select:focus-visible{outline:2px solid #d0f0ff;outline-offset:1px}
+
+.crisis-source-links{display:grid;gap:.42rem;margin-top:.55rem}
+.crisis-source-links a{color:#9fe1ee;font-size:11px;text-underline-offset:2px}
+.crisis-info-card summary{cursor:pointer;color:#7edce2;font-weight:700;font-size:12px}
+
+.tabs{gap:4px;grid-template-columns:1fr 1fr}
+.tabs .tab{min-width:0;padding:9px 5px;font-size:12px;white-space:normal}
+.crisis-focus-caption[data-phase="source"] .crisis-focus-side{color:#ffdc9c}
+.crisis-focus-caption[data-phase="travel"] .crisis-focus-side{color:#ade3fd}
+.crisis-focus-caption[data-phase="arrival"] .crisis-focus-side{color:#8bded2}
+
+.v34-cortex-panel .v34-mode-switch{margin:0;padding:0;border:0;background:none}
+.alternate-patterns{grid-column:1/-1}
+.alternate-patterns summary{cursor:pointer;font-size:.8rem;color:var(--muted);padding:.35rem 0}
+.alternate-patterns button{width:100%;margin-top:.3rem}
+.crisis-route-actions [hidden],.v34-note[hidden]{display:none}
+
+label[for=connectomeRegion]{display:block}
+
+#creditsModal a { color: var(--accent); }

@@ -1,0 +1,33 @@
+{
+  "version": "V44",
+  "source_glb": "mindboggle_oas1_0368_cortex_v44_medial.glb",
+  "original_source_glb": "mindboggle_oas1_0368_v33.glb",
+  "subject": "Mindboggle-101 OAS1_0368_MR1",
+  "matrix_mm_to_old": [
+    [
+      -0.0010636564567932528,
+      0.00011135576358287959,
+      -7.797254597906039e-05
+    ],
+    [
+      0.0001202283259837949,
+      0.0010576311607270734,
+      -0.00012963934425087902
+    ],
+    [
+      6.344267996165673e-05,
+      -0.0001373357341100176,
+      -0.001061583159523222
+    ],
+    [
+      -0.0040590369387876165,
+      1.615645058507102,
+      -0.0025158839271576757
+    ]
+  ],
+  "method": "Ajuste transversal local de la superficie cortical V43 con verificación de cruces triangulares frente al seno sagital superior y la hoz.",
+  "scope": "70 parcelas Mindboggle; las mallas detalladas provienen de V32.",
+  "shape_note": "Corteza derivada de MRI sujeta a deformación educativa; ya NO conserva la geometría exacta del sujeto.",
+  "verification": "Cero pares de triángulos en contacto frente a la hoz y al seno sagital superior en esta prueba.",
+  "report": "REPORTE_AJUSTE_MEDIAL_V44.json"
+}

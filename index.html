@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="theme-color" content="#08111f" />
+  <title>Atlas ETM V61 · Neuroanatomía 3D</title>
+  <meta name="description" content="Visor anatómico 3D en español para explorar la anatomía relacionada con la epilepsia temporal mesial." />
+  <link rel="stylesheet" href="style.css?v=61" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">🧠</div>
+        <div>
+          <h1>Atlas ETM V61 · Neuroanatomía 3D</h1>
+          <p>Modelo anatómico interactivo en español</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button id="btnAuto" class="ghost">Rotación automática</button>
+        <button id="btnCredits" class="ghost">Créditos</button>
+        <button id="btnFullscreen" class="ghost">Pantalla completa</button>
+      </div>
+    </header>
+
+    <aside id="sidebar" class="sidebar">
+      <div class="tabs" role="tablist" aria-label="Módulos del simulador">
+        <button class="tab active" data-tab="atlas">Atlas cerebral</button>
+        <button class="tab" data-tab="neural">Propagación</button>
+        <button class="tab" data-tab="potential">Potenciales</button>
+        <button class="tab" data-tab="crisis">Animación de crisis</button>
+      </div>
+
+      <div id="anatomySearch" class="search-wrap">
+        <input id="searchInput" type="search" placeholder="Buscar: hipocampo, amígdala, fórnix…" autocomplete="off" />
+        <span class="search-icon">⌕</span>
+      </div>
+
+      <section id="anatomyHemisphere" class="compact-block">
+        <div class="section-title">Hemisferio</div>
+        <div class="segmented" id="hemisphereButtons">
+          <button data-side="both" class="active">Ambos</button>
+          <button data-side="left">Izquierdo</button>
+          <button data-side="right">Derecho</button>
+        </div>
+      </section>
+
+      <section id="tractControls" class="compact-block hidden">
+        <button id="btnTractView" class="ghost tract-toggle" aria-pressed="false">Activar vista de tractos</button>
+        <div id="tractOptions" class="hidden">
+          <p class="model-note">Explora los haces y comisuras del atlas. Son superficies 3D: no representan neuronas individuales ni sinapsis.</p>
+          <label class="range-label"><span>Contexto anatómico</span><b id="contextValue">8%</b></label>
+          <input id="contextOpacity" type="range" min="0" max="30" value="8" aria-label="Opacidad del contexto anatómico">
+          <label class="check-row"><input id="tractSolo" type="checkbox"> Atenuar los tractos no seleccionados</label>
+          <p class="model-note">Selecciona un haz en la lista o sobre el cerebro. El mismo color identifica sus dos lados.</p>
+          <select id="tractSelect" aria-label="Seleccionar tracto"><option value="">Todos los tractos</option></select>
+          <div class="action-row"><button id="tractAll">Ver todos</button><button id="tractFocus">Centrar haz</button><button id="tractClear">Quitar selección</button></div>
+        </div>
+      </section>
+      <div id="searchResults" class="search-results hidden"></div>
+
+      <div id="tab-atlas" class="tab-panel active">
+        <section class="v34-cortex-panel" aria-label="Áreas corticales">
+          <label class="v34-mode-switch">
+            <span><b>Áreas corticales</b><small>Colorea las regiones de la corteza cerebral.</small></span>
+            <input id="v34AreasToggle" type="checkbox" role="switch" aria-label="Colorear áreas corticales">
+            <span class="v34-slider"></span>
+          </label>
+          <p class="v34-note" id="v34RegistrationStatus" role="status" hidden></p>
+        </section>
+        <section>
+          <div class="section-title">Capas anatómicas</div>
+          <div id="categoryList" class="category-list"></div>
+        </section>
+      </div>
+
+      <div id="tab-crisis" class="tab-panel">
+        <section class="crisis-intro">
+          <div class="section-title">Simulación de propagación temporal mesial</div>
+          <p class="model-note">La cámara sigue el recorrido temporal hasta la corteza orbitofrontal. Luego se abre para mostrar las ramas de la extensión de red. El uncinado y el fórnix aparecen en el cierre.</p>
+          <div class="crisis-readout"><span id="crisisRunningStatus">Cargando corteza MRI</span><b id="crisisSideReadout">Inicio izquierdo</b></div>
+        </section>
+        <section>
+          <div class="section-title">Control de la animación</div>
+          <div class="crisis-controls-row"><button id="crisisPlay" class="crisis-main-button">▶ Reproducir</button><button id="crisisReset">↺ Reiniciar</button></div>
+          <label class="crisis-label" for="crisisTimeline"><span>Recorrido</span><output id="crisisTimeText">0 % · tiempo ilustrativo</output></label>
+          <input id="crisisTimeline" type="range" min="0" max="900" value="0" step="1" aria-label="Avanzar o retroceder la simulación">
+          <div class="crisis-controls-row"><button id="crisisPrev">← Etapa anterior</button><button id="crisisNext">Etapa siguiente →</button></div>
+          <div class="crisis-config-row"><label for="crisisStartSide">Foco inicial</label><select id="crisisStartSide"><option value="left">Izquierdo</option><option value="right">Derecho</option></select></div>
+
+        </section>
+        <section>
+          <div class="section-title">Capas de visualización</div>
+          <label class="crisis-check"><input type="checkbox" id="crisisShowConnections" checked><span>Mostrar conexiones esquemáticas <small>Proyecciones locales y relevo mamilotalámico</small></span></label>
+          <label class="crisis-check"><input type="checkbox" id="crisisOrbit"><span>Órbita suave durante reproducción <small>Pequeño movimiento alrededor de la región enfocada</small></span></label>
+          <div class="crisis-config-row"><label for="crisisCameraDistance">Distancia de cámara</label><select id="crisisCameraDistance"><option value="close" selected>Cercana · guiada</option><option value="medium">Media</option><option value="wide">General</option></select></div>
+          <label class="crisis-check"><input type="checkbox" id="crisisFollowCamera" checked><span>Cámara guiada por el recorrido <small>Encuadra cada región y abre la vista en el cruce</small></span></label>
+        </section>
+        <section>
+          <div class="section-title">Nueve etapas · selecciona una</div>
+          <div id="crisisSteps" class="crisis-step-list" aria-label="Etapas del recorrido"></div>
+        </section>
+        <section>
+          <div class="section-title">Cobertura de los modelos</div>
+          <p class="model-note" id="crisisAvailability">Se comprobará qué estructuras están presentes en brain.glb.</p>
+          <p class="model-note">El subículo se indica con un <strong>marcador de localización orientativa</strong>. Cápsulas extrema e interna y tracto mamilotalámico: no representados como fascículos anatómicos en el archivo actual.</p>
+        </section>
+      </div>
+
+      <div id="tab-neural" class="tab-panel">
+        <div class="neural-subpanel connectome-panel active">
+          <section>
+            <div class="section-title">Mapa de propagación 3D</div>
+            <p class="model-note neural-note">Los puntos ilustrativos se distribuyen sobre la anatomía del atlas. Cada etapa se ilumina con un color propio.</p>
+            <div class="neural-readout">
+              <div><span>Estado</span><b id="connectomeState">Listo</b></div>
+              <div><span>Patrón</span><b id="connectomePattern">Ruta completa de crisis</b></div>
+              <div><span>Hemisferio</span><b id="connectomeHemisphere">Izquierdo</b></div>
+              <div><span>Nodos de la selección</span><b id="connectomeCount">—</b></div>
+            </div>
+            <button id="btnConnectomeStart" class="neural-primary">▶ Iluminar propagación</button>
+            <div class="action-row neural-actions">
+              <button id="btnConnectomePause">Pausar</button>
+              <button id="btnConnectomeReset">Reiniciar</button>
+              <button id="btnConnectomeFocus">Vista general</button>
+            </div>
+          </section>
+          <section>
+            <label class="section-title" for="connectomeRegion">Ir a una estructura</label>
+            <select id="connectomeRegion" class="connectome-select" disabled>
+              <option value="0">Vista general</option>
+            </select>
+          </section>
+          <section>
+            <div class="section-title">Aislar nodos</div>
+            <label class="range-label" for="connectomeLayer">Capa anatómica</label>
+            <select id="connectomeLayer" class="connectome-select"><option value="-1">Todas las capas</option></select>
+            <label class="range-label" for="connectomeSide">Hemisferio visible</label>
+            <select id="connectomeSide" class="connectome-select">
+              <option value="-1">Ambos</option>
+              <option value="1">Izquierdo</option>
+              <option value="2">Derecho</option>
+              <option value="0">Línea media</option>
+            </select>
+            <label class="range-label" for="connectomeStage">Etapa visible</label>
+            <select id="connectomeStage" class="connectome-select"></select>
+            <p id="connectomeEmpty" class="model-note hidden" role="status">Esta combinación de filtros no contiene nodos. Prueba otra capa, hemisferio o etapa.</p>
+          </section>
+          <section>
+            <div class="section-title">Patrón didáctico</div>
+            <div class="quick-grid small">
+              <button class="active" data-connectome-pattern="crisis">Ruta completa de crisis · 9 etapas</button>
+              <details class="alternate-patterns"><summary>Otros patrones</summary>
+              <button data-connectome-pattern="anterior">Temporal mesial → temporal anterior → orbitofrontal</button>
+              <button data-connectome-pattern="posterior">Temporal mesial → parahipocampal → fusiforme</button>
+              <button data-connectome-pattern="bilateral">Temporal mesial → comisura hipocampal → contralateral</button>
+              <button data-connectome-pattern="mixto">Mixto bilateral</button>
+              </details>
+            </div>
+            <div id="connectomeOriginRow">
+              <label class="range-label" for="connectomeOrigin">Hemisferio de origen</label>
+              <select id="connectomeOrigin" class="connectome-select"><option value="left">Izquierdo</option><option value="right">Derecho</option></select>
+            </div>
+          </section>
+          <section>
+            <div class="section-title">Densidad y visualización</div>
+            <label class="range-label" for="connectomeEmphasize">Durante la propagación</label>
+            <select id="connectomeEmphasize" class="connectome-select">
+              <option value="enfoque">Destacar la etapa nueva</option>
+              <option value="acumular">Dar brillo similar a todas las etapas</option>
+            </select>
+            <label class="range-label" for="connectomeSpeed"><span>Velocidad</span><b id="connectomeSpeedValue">1,0×</b></label>
+            <input id="connectomeSpeed" type="range" min="40" max="240" value="100" />
+            <label class="range-label" for="connectomeDensity"><span>Total de nodos</span><output id="connectomeDensityValue" for="connectomeDensity">120.000</output></label>
+            <input id="connectomeDensity" type="range" min="5000" max="2000000" step="5000" value="120000" />
+            <label class="range-label" for="connectomeQuality"><span>Calidad gráfica (sin quitar nodos)</span></label>
+            <select id="connectomeQuality" class="connectome-select" aria-label="Calidad gráfica">
+              <option value="auto">Equilibrada</option>
+              <option value="ahorro">Más fluida</option>
+              <option value="detalle">Más nítida</option>
+            </select>
+            <label class="check-row"><input id="toggleConnectomeMicro" type="checkbox"><span>Aumentar brillo de los nodos inactivos</span></label>
+            <p class="model-note">Las etapas activadas conservan su color. Los nodos se distribuyen sobre las superficies del atlas.</p>
+          </section>
+        </div>
+
+      </div>
+
+      <div id="tab-potential" class="tab-panel">
+        <section class="lab-sidebar">
+          <h2>Transmisión sináptica</h2>
+          <p>Estimula A y sigue la señal desde B hasta C y D. Puedes activar la neurona I mientras avanza el ensayo.</p>
+          <div class="lab-transport" role="group" aria-label="Controles de la simulación">
+            <button type="button" id="labStimulate">Estimular A</button>
+            <button type="button" id="labPause" disabled>Pausar</button>
+            <button type="button" id="labReset">Reiniciar</button>
+          </div>
+          <button type="button" id="labInhibit" aria-pressed="false">Activar neurona inhibitoria</button>
+          <p id="labInhibitStatus" class="lab-inhibit-status" role="status">Neurona I inactiva.</p>
+          <div class="lab-legend" aria-label="Leyenda del circuito">
+            <span><i class="lab-key exc"></i>Excitación</span>
+            <span><i class="lab-key inh"></i>Inhibición</span>
+          </div>
+        </section>
+      </div>
+
+      <section id="anatomyBottomControls" class="compact-block bottom-controls">
+        <label class="range-label"><span>Opacidad cortical</span><b id="cortexValue">100%</b></label>
+        <input id="cortexOpacity" type="range" min="5" max="100" value="100" />
+        <div class="action-row">
+          <button id="btnIsolate">Aislar</button>
+          <button id="btnHideSelected">Ocultar selección</button>
+          <button id="btnShowAll">Mostrar todo</button>
+          <button id="btnFocus">Centrar</button>
+        </div>
+      </section>
+    </aside>
+
+    <main id="viewport" class="viewport">
+      <canvas id="brainCanvas"></canvas>
+      <div id="v34FloatingLabel" class="v34-floating-label hidden" aria-live="off"></div>
+      <section id="potentialsWorkspace" class="potentials-workspace hidden" aria-label="Potenciales">
+        <div class="lab-view">
+          <section class="lab-card lab-circuit-card">
+            <div class="lab-card-heading">
+              <h2>Circuito sináptico</h2>
+              <span id="labCycle">En reposo</span>
+            </div>
+            <svg id="labSynapseDiagram" viewBox="0 0 920 306" role="img" aria-label="A excita a B. El axón de B se bifurca hacia C y D. La neurona I inhibe a B."></svg>
+            <p id="labSynapseStatus" class="lab-status" role="status">Pulsa Estimular A para iniciar el circuito.</p>
+          </section>
+          <section class="lab-card lab-detail-card">
+            <div class="lab-card-heading">
+              <h2>Hendidura sináptica</h2>
+              <div class="lab-detail-controls" role="group" aria-label="Sinapsis ampliada">
+                <button type="button" data-lab-detail="exc" aria-pressed="true">A → B</button>
+                <button type="button" data-lab-detail="inh" aria-pressed="false">I → B</button>
+              </div>
+            </div>
+            <svg id="labSynapseDetail" viewBox="0 0 650 180" role="img" aria-label="Detalle de la sinapsis con terminal presináptico, vesículas, hendidura y receptores en la membrana postsináptica"></svg>
+            <p id="labDetailCaption" class="lab-detail-caption"></p>
+          </section>
+          <section class="lab-card lab-chart">
+            <div class="lab-card-heading">
+              <h2>Potenciales de membrana</h2>
+              <span class="lab-threshold-key">Umbral de disparo</span>
+            </div>
+            <svg id="labSynapsePlot" role="img" aria-label="Trazados sincronizados de las neuronas A, B, C y D"></svg>
+            <label class="range-label" for="labSynapseTime">Recorrer el trazado <output id="labSynapseTimeValue" for="labSynapseTime">0 ms</output></label>
+            <input type="range" id="labSynapseTime" min="0" max="180" step="0.1" value="0">
+            <p class="lab-detail-caption">Circuito didáctico. Voltajes y tiempos ilustrativos.</p>
+          </section>
+        </div>
+      </section>
+      <button id="mobileMenu" class="mobile-menu">☰</button>
+      <div class="viewport-toolbar">
+        <button id="btnResetView" title="Vista inicial" aria-label="Vista inicial">⌂</button>
+        <button id="btnZoomIn" title="Acercar" aria-label="Acercar">＋</button>
+        <button id="btnZoomOut" title="Alejar" aria-label="Alejar">−</button>
+      </div>
+      <div id="tractBadge" class="tract-badge hidden">VISTA DE TRACTOS · Anatomía del atlas</div><div id="tractTooltip" class="tract-tooltip hidden"></div>
+      <div id="routeBanner" class="route-banner hidden"></div>
+      <div id="crisisSceneBadge" class="crisis-scene-badge hidden">Cerebro completo</div>
+      <div id="crisisHemisphereMarkers" class="crisis-world-labels hidden" aria-hidden="true">
+        <span data-side="left">Izq.</span>
+        <span data-side="right">Der.</span>
+      </div>
+      <div id="crisisOverviewMarkers" class="crisis-world-labels hidden" role="group" aria-label="Etapas sobre el cerebro"></div>
+      <section id="crisisRoutePanel" class="crisis-route-panel hidden" aria-label="Línea de tiempo de la crisis">
+        <div id="crisisFocusCaption" class="crisis-focus-caption hidden" aria-live="polite" aria-atomic="true">
+          <span class="crisis-focus-step" id="crisisFocusStep">Etapa 1 de 9</span>
+          <strong id="crisisFocusName">Hipocampo</strong>
+          <span class="crisis-focus-side" id="crisisFocusSide">Hemisferio izquierdo</span>
+          <small id="crisisFocusNarration"></small>
+        </div>
+        <div id="crisisStops" class="crisis-stops" role="group" aria-label="Regiones de la etapa" hidden></div>
+        <div class="crisis-route-actions">
+          <button type="button" id="crisisViewportPlay">▶ Reproducir</button>
+          <label class="crisis-speed" for="crisisSpeed">Velocidad
+            <select id="crisisSpeed">
+              <option value="0.25">0,25×</option>
+              <option value="0.5">0,5×</option>
+              <option value="0.75">0,75×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.5">1,5×</option>
+              <option value="2">2×</option>
+            </select>
+          </label>
+          <button type="button" id="crisisViewportTracts" aria-pressed="true" hidden>Fascículos</button>
+          <button type="button" id="crisisOverview" aria-pressed="false">Ir al cierre</button>
+          <button type="button" id="crisisBrainView" aria-pressed="false">Ver cerebro completo</button>
+          <button type="button" id="crisisShowOrigin" hidden>Ver origen de la rama</button>
+          <button type="button" id="crisisRecenter">Centrar vista</button>
+        </div>
+        <div id="crisisRouteTimeline" class="crisis-route-timeline" role="group" aria-label="Pausar en una etapa"></div>
+      </section>
+      <div id="connectomeOverlay" class="connectome-overlay hidden">
+        <div class="connectome-chip">
+          <b>Mapa de propagación 3D</b>
+          <span id="connectomeOverlayText">Cargando geometría…</span>
+          <span id="connectomeRouteDetail" class="connectome-route-detail" hidden></span>
+          <div id="connectomeTimeline" class="connectome-timeline" role="group" aria-label="Revisar las etapas de propagación"></div>
+          <progress id="connectomeProgress" value="0" hidden aria-label="Avance de la propagación"></progress>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i class="dot cortex"></i>Corteza</span>
+        <span><i class="dot deep"></i>Sustancia gris profunda</span>
+        <span data-tract-legend><i class="dot white"></i>Sustancia blanca</span>
+        <span data-tract-legend><i class="dot tract"></i>Tractos</span>
+      </div>
+    </main>
+
+    <aside id="infoPanel" class="info-panel">
+      <section id="crisisInfo" class="crisis-info hidden" aria-live="polite">
+        <div class="info-kicker">Animación de crisis · modelo propuesto</div>
+        <h2 id="crisisStageTitle">Hipocampo</h2>
+        <div class="crisis-step-meta"><span id="crisisStageNumber">Etapa 1 de 9</span><b id="crisisCurrentLabel">Hipocampo</b></div>
+        <article class="crisis-info-card"><h3>¿Qué se activa?</h3><p id="crisisStageDescription"></p></article>
+        <article class="crisis-info-card">
+          <h3>Conexión de esta etapa</h3>
+          <p><strong id="crisisBranchTitle"></strong></p>
+          <p id="crisisBranchEvidence"></p>
+          <div id="crisisStageSources" class="crisis-source-links" aria-label="Referencias de la etapa"></div>
+        </article>
+        <article class="crisis-info-card"><h3>Geometría del atlas</h3><p id="crisisStageEvidence"></p></article>
+        <article class="crisis-info-card"><h3>Cómo leer la escena</h3>
+          <p><span class="crisis-legend-dot" style="background:#2de3df"></span> La región gana opacidad y color al recibir actividad.</p>
+          <p><span class="crisis-legend-dot" style="background:#ffdf8b"></span> El marcador dorado señala la localización aproximada del subículo.</p>
+          <p><span class="crisis-legend-dot" style="background:#ffc26b"></span> Al cierre, el uncinado aparece en turquesa y el fórnix en violeta. Sus fibras son ilustrativas.</p>
+        </article>
+        <article class="crisis-info-card"><h3>Importante para interpretar</h3>
+          <p>La propagación no sigue necesariamente nueve pasos secuenciales en pacientes reales. «Contralateral» no es sinónimo de «generalización bilateral tónico-clónica».</p>
+          <p>El paso por el tálamo se muestra con relevo mamilar; el fórnix no desemboca directamente en el tálamo. Las cápsulas extrema e interna no están reconstruidas como conexiones aquí.</p>
+        </article>
+        <details class="crisis-info-card">
+          <summary>Artículos base de la ruta</summary>
+          <div class="crisis-source-links">
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4103687/" target="_blank" rel="noopener noreferrer">Yoo et al. · Propagación temporal en EEG intracraneal</a>
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12065117/" target="_blank" rel="noopener noreferrer">Schulze-Bonhage y San Antonio-Arce · Polo temporal</a>
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5498250/" target="_blank" rel="noopener noreferrer">Morgan et al. · Red de conectividad en RM</a>
+            <a href="https://doi.org/10.1016/j.nrl.2020.06.010" target="_blank" rel="noopener noreferrer">San-Juan y Rodríguez-Méndez · Epilepsia y redes</a>
+          </div>
+          <p>Las nueve etapas son puntos de revisión del modelo didáctico. En la extensión de red se superponen varias activaciones.</p>
+        </details>
+      </section>
+
+      <div class="info-empty" id="infoEmpty">
+        <div class="info-icon">◎</div>
+        <h2>Selecciona una estructura</h2>
+        <p>Selecciona una estructura en el cerebro o búscala por nombre.</p>
+      </div>
+      <div id="infoContent" class="hidden">
+        <div class="info-kicker" id="infoCategory"></div>
+        <h2 id="infoTitle"></h2>
+        <div class="chips" id="infoChips"></div>
+        <p id="infoDescription" class="info-description"></p>
+        <p id="anatomyAuditNote" class="anatomy-audit-note hidden" role="status"></p>
+        <dl class="meta-list">
+          <div><dt>Región</dt><dd id="infoRegion"></dd></div>
+          <div><dt>Fuente anatómica</dt><dd id="infoSource"></dd></div>
+          <div class="v34-detail" id="v34RelationsRow"><dt>Relaciones anatómicas</dt><dd id="v34InfoRelations">Selecciona una estructura para consultar sus relaciones.</dd></div>
+          <div class="v34-detail" id="v34FunctionRow"><dt>Función</dt><dd id="v34InfoFunction">Se mostrará la información disponible.</dd></div>
+          <div class="v34-detail" id="v34SulciRow"><dt>Límites y surcos</dt><dd id="v34InfoSulci">Se indicarán si están documentados.</dd></div>
+          
+        </dl>
+        <div id="groupMembers" class="group-members hidden"></div>
+      </div>
+    </aside>
+
+    <div id="loading" class="loading-screen">
+      <div class="loading-card">
+        <div class="brain-loader">🧠</div>
+        <h2>Cargando atlas 3D</h2>
+        <p id="loadingText">Preparando las estructuras anatómicas…</p>
+        <div class="progress"><div id="progressBar"></div></div>
+      </div>
+    </div>
+
+    <div id="creditsModal" class="modal hidden">
+      <div class="modal-card">
+        <button id="closeCredits" class="modal-close">×</button>
+        <h2>Créditos y licencia</h2>
+        <p>El modelo cerebral base y sus metadatos proceden de <a href="https://github.com/itayinbarr/brainproject" target="_blank" rel="noopener noreferrer">Brain Project, de Itay Inbar</a>, con geometría de Z-Anatomy y BodyParts3D / DBCLS. El modelo base y sus derivados se distribuyen bajo <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>. El atlas adapta etiquetas, agrupaciones y trazos para la visualización.</p>
+        <p>Las superficies corticales adicionales proceden de <a href="https://doi.org/10.5281/zenodo.22072032" target="_blank" rel="noopener noreferrer">Mindboggle-101, de Arno Klein</a>, sujeto OAS1_0368_MR1, FreeSurfer 5.1, bajo <a href="https://creativecommons.org/licenses/by/4.0/deed.es" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. Se convirtieron a GLB y se alinearon de forma aproximada con el modelo base. Referencia del conjunto de datos: <a href="https://doi.org/10.3389/fnins.2012.00171" target="_blank" rel="noopener noreferrer">Klein y Tourville (2012)</a>.</p>
+        <p>El paquete incluye los <a href="./LICENSE_ORIGINAL.txt" target="_blank" rel="noopener noreferrer">avisos de Brain Project</a> y la <a href="./vendor/draco/LICENSE.txt" target="_blank" rel="noopener noreferrer">licencia de Google Draco</a>.</p>
+        <p class="warning">Modelo educativo. Las estructuras registradas desde atlas de neuroimagen son aproximadas y no deben utilizarse para planificación clínica o quirúrgica.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/three@0.137.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.137.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://unpkg.com/three@0.137.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://unpkg.com/three@0.137.0/examples/js/loaders/DRACOLoader.js"></script>
+  <script src="potentials-lab.js?v=50"></script>
+  <script src="crisis-route-data.js?v=60"></script>
+  <script src="crisis-tract-fibers.js?v=55"></script>
+  <script src="crisis-animation.js?v=60"></script>
+  <script src="app.js?v=61"></script>
+</body>
+</html>
